@@ -1,5 +1,5 @@
 # STONEHNH - HomeStay & Hammock (Front-End)
-Dự án booking homestay ven biển 
+Dự án booking homestay ven biển khắp Việt Nam
 
 ### Hướng dẫn sử dụng
 1. Download zip code hoặc "git clone + url_http "
