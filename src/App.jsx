@@ -8,7 +8,19 @@ import { AuthContext } from './components/context/auth.context';
 import { Spin } from 'antd';
 import Test from './components/todo/kkk';
 
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+
 const App = () => {
+
+  //Animation HomePage
+  useEffect(() => {
+    AOS.init({
+      duration: 1000, // thời gian chạy hiệu ứng (ms)
+      // once: true      // chỉ chạy 1 lần
+    });
+  }, []);
+
 
   const { setUser, isAppLoading, setIsAppLoading } = useContext(AuthContext);
 

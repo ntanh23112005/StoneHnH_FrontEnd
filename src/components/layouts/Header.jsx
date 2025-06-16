@@ -8,6 +8,8 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../context/auth.context';
 import { logoutAPI } from '../../services/api.service';
+import HeaderTop from './header.form';
+
 const Header = () => {
     // a: anchor
     const [current, setCurrent] = useState('');
@@ -88,12 +90,19 @@ const Header = () => {
     ];
 
     return (
-        <Menu
-            onClick={onClick}
-            selectedKeys={[current]}
-            mode="horizontal"
-            items={items}
-        />
+        <>
+            <img src="images/Untitled-1.png" style={{ width: "100%", height: "250px" }} />
+            <div style={{ position: "sticky", top: "0", left: "0", zIndex: "1000" }}>
+                {/* <Menu
+                    onClick={onClick}
+                    selectedKeys={[current]}
+                    mode="horizontal"
+                    items={items}
+                /> */}
+                <HeaderTop />
+            </div>
+
+        </>
     )
 }
 

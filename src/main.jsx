@@ -16,6 +16,20 @@ import { AuthWrapper } from './components/context/auth.context.jsx';
 import PrivateRoute from './pages/private.route.jsx';
 import 'nprogress/nprogress.css';
 import 'nprogress/nprogress.js';
+import HomePage from './pages/home.jsx';
+
+import 'bootstrap/dist/css/bootstrap.min.css';
+// Base font
+import "@fontsource/inter"; // 400 regular
+
+// Optional weights
+import "@fontsource/inter/500.css"; // Medium
+import "@fontsource/inter/600.css"; // Semi-bold
+import "@fontsource/inter/700.css"; // Bold
+
+// Optional italic versions
+import "@fontsource/inter/400-italic.css";
+import "@fontsource/inter/700-italic.css";
 
 const router = createBrowserRouter([
   {
@@ -25,7 +39,8 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <TodoApp />,
+        // element: <TodoApp />,
+        element: <HomePage />
       },
       {
         path: "/users",
