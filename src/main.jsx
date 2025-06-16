@@ -1,21 +1,21 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App.jsx'
+import 'nprogress/nprogress.css';
+import 'nprogress/nprogress.js';
+import ReactDOM from 'react-dom/client';
 import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
+import App from './App.jsx';
+import { AuthWrapper } from './components/context/auth.context.jsx';
+import ErrorPage from './components/layouts/Error.jsx';
+import TodoApp from './components/todo/TodoApp.jsx';
+import BookPage from './pages/book.jsx';
+import HomestayPage from './pages/homestay.jsx';
 import LoginPage from './pages/login.jsx';
+import PrivateRoute from './pages/private.route.jsx';
 import RegisterPage from './pages/register.jsx';
 import UserPage from './pages/user.jsx';
-import BookPage from './pages/book.jsx';
-import './styles/global.css'
-import TodoApp from './components/todo/TodoApp.jsx';
-import ErrorPage from './components/layouts/Error.jsx';
-import { AuthWrapper } from './components/context/auth.context.jsx';
-import PrivateRoute from './pages/private.route.jsx';
-import 'nprogress/nprogress.css';
-import 'nprogress/nprogress.js';
+import './styles/global.css';
 
 const router = createBrowserRouter([
   {
@@ -40,7 +40,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/homestays",
-        element: <h1>HIHI</h1>
+        element: <HomestayPage />
       }
     ]
   },
