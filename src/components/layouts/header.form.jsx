@@ -34,7 +34,7 @@ const userMenuItems = [
 ];
 
 const categories = [
-    { url: '/', label: 'Home Stay', icon: HomeStayIcon },
+    { url: '/category/home-stay', label: 'Home Stay', icon: HomeStayIcon },
     { url: '/users', label: 'Khách sạn', icon: HotelIcon },
     { url: '/category/most-like', label: 'Yêu thích nhất', icon: MostLikeIcon },
     { url: '/category/save-money', label: 'Tiết kiệm', icon: SaveMoneyIcon },
@@ -47,7 +47,7 @@ const HeaderTop = () => {
             {/* Top Header */}
             <div className="header-top">
                 {/* Logo */}
-                <div>STONEHNH</div>
+                <div><Link to={'/'} style={{ textDecoration: 'none' }}>STONEHNH</Link></div>
 
                 {/* Search Bar */}
                 <div className="search-bar">
@@ -94,6 +94,7 @@ const HeaderTop = () => {
                             className={({ isActive }) =>
                                 `category-item ${isActive ? 'active-category' : ''}`
                             }
+                            end
                         >
                             <div className="category-content">
                                 <img src={cat.icon} alt={cat.label} className="category-icon" />
