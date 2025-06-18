@@ -24,9 +24,9 @@ const App = () => {
 
   const { setUser, isAppLoading, setIsAppLoading } = useContext(AuthContext);
 
-  useEffect(() => {
-    fetchUserInfo();
-  }, [])
+  // useEffect(() => {
+  //   fetchUserInfo();
+  // }, [])
 
   // const delay = (milSeconds) => {
   //   return new Promise((resolve, reject) => {
@@ -35,13 +35,14 @@ const App = () => {
   //     }, milSeconds)
   //   })
   // }
-  const fetchUserInfo = async () => {
-    const res = await getAccountAPI()
-    if (res.data) {
-      setUser(res.data.user)
-    }
-    setIsAppLoading(false)
-  }
+
+  // const fetchUserInfo = async () => {
+  //   const res = await getAccountAPI()
+  //   if (res.data) {
+  //     setUser(res.data.user)
+  //   }
+  //   setIsAppLoading(false)
+  // }
 
   return (
     <>
