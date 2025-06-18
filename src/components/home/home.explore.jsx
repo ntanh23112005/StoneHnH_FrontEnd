@@ -17,14 +17,14 @@ const HomeExplore = () => {
                     </p>
                 </div>
                 <div data-aos="fade-left" className="explore-image">
-                    <img src="/src/assets/homepage-vungtau.jpg" alt="" />
+                    <img src="/images/home/homepage-vungtau.jpg" alt="" />
                 </div>
             </div>
 
             {/* Block 2 - đảo ngược ảnh và text */}
             <div data-aos="fade-right" className="explore-block">
                 <div className="explore-image">
-                    <img src="/src/assets/homepage-vungtau.jpg" alt="" />
+                    <img src="/images/home/homepage-vungtau.jpg" alt="" />
                 </div>
                 <div data-aos="fade-left" className="explore-text">
                     <p className="explore-text-title">Vũng Tàu</p><br />
@@ -43,7 +43,7 @@ const HomeExplore = () => {
                     </p>
                 </div>
                 <div data-aos="fade-left" className="explore-image">
-                    <img src="/src/assets/homepage-vungtau.jpg" alt="" />
+                    <img src="/images/home/homepage-vungtau.jpg" alt="" />
                 </div>
             </div>
         </>

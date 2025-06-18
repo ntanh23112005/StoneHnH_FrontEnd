@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Input, Button, Switch, Dropdown, Avatar } from 'antd';
 import {
     SearchOutlined,
@@ -110,7 +110,6 @@ const HeaderTop = () => {
                         <Switch
                             checkedChildren={<CheckOutlined />}
                             unCheckedChildren={<CloseOutlined />}
-                            defaultChecked={false}
                         />
                         <span>Hiện giá trước thuế</span>
                     </div>

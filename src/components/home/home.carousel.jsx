@@ -4,12 +4,12 @@ import Marquee from "react-fast-marquee";
 import { useNavigate } from "react-router-dom";
 
 const destinations = [
-    { src: "/src/assets/homepage-vungtau.jpg", title: "Thailand" },
-    { src: "/src/assets/homepage-vungtau.jpg", title: "Vietnam" },
-    { src: "/src/assets/homepage-vungtau.jpg", title: "Singapore" },
-    { src: "/src/assets/homepage-vungtau.jpg", title: "Japan" },
-    { src: "/src/assets/homepage-vungtau.jpg", title: "Korea" },
-    { src: "/src/assets/homepage-vungtau.jpg", title: "France" },
+    { src: "/images/home/homepage-vungtau.jpg", title: "Thailand" },
+    { src: "/images/home/homepage-vungtau.jpg", title: "Vietnam" },
+    { src: "/images/home/homepage-vungtau.jpg", title: "Singapore" },
+    { src: "/images/home/homepage-vungtau.jpg", title: "Japan" },
+    { src: "/images/home/homepage-vungtau.jpg", title: "Korea" },
+    { src: "/images/home/homepage-vungtau.jpg", title: "France" },
 ];
 
 const HomeCarousel = () => {
@@ -22,7 +22,7 @@ const HomeCarousel = () => {
                 Mỗi cuộc hành trình, dù dài hay ngắn, đều bắt đầu từ những bước đi đầu tiên
             </p>
 
-            <Marquee pauseOnHover speed={50} gradient={false}>
+            <Marquee pauseOnHover speed={25} gradient={false}>
                 {destinations.map((item, index) => (
                     <div key={index} style={{ margin: "0 20px", textAlign: "center" }}>
                         <img
@@ -65,7 +65,8 @@ const HomeCarousel = () => {
                     onMouseOver={(e) => (e.target.style.backgroundColor = "#90b6d4")}
                     onMouseOut={(e) => (e.target.style.backgroundColor = "#028ad4")}
                 >
-                    Khám phá ngay <ArrowRightOutlined style={{ fontWeight: 'bold', fontSize: '20px' }} />
+                    Khám phá ngay <ArrowRightOutlined
+                        style={{ fontWeight: 'bold', fontSize: '20px' }} />
                 </button>
             </div>
         </>
