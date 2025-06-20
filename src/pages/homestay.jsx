@@ -7,6 +7,7 @@ import { Link, useLocation } from 'react-router-dom';
 
 const HomestayPage = () => {
 
+    // Lấy param cho category
     const location = useLocation();
     const queryParam = new URLSearchParams(location.search);
     const category = queryParam.get('category')
