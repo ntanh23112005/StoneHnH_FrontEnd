@@ -11,7 +11,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import AOS from 'aos';
 import 'aos/dist/aos.css';
-import { PriceContext } from './components/context/price.context';
 
 const App = () => {
 

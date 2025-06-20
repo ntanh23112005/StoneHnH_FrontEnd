@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Input, Button, Switch, Dropdown, Avatar } from 'antd';
 import {
     SearchOutlined,
@@ -8,7 +8,7 @@ import {
     CheckOutlined,
     CloseOutlined
 } from '@ant-design/icons';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import './header.css';
 
 import ahi from '../../assets/react.svg';
@@ -17,6 +17,7 @@ import HotelIcon from '../../assets/menu-bar/hotel.svg';
 import MostLikeIcon from '../../assets/menu-bar/most-like.svg';
 import SaveMoneyIcon from '../../assets/menu-bar/save-money.svg';
 import ViewBienIcon from '../../assets/menu-bar/view-bien.svg';
+import { AuthContext } from '../context/auth.context';
 
 const userMenuItems = [
     {
@@ -34,14 +35,20 @@ const userMenuItems = [
 ];
 
 const categories = [
-    { url: '/category/home-stay', label: 'Home Stay', icon: HomeStayIcon },
-    { url: '/users', label: 'Khách sạn', icon: HotelIcon },
-    { url: '/category/most-like', label: 'Yêu thích nhất', icon: MostLikeIcon },
-    { url: '/category/save-money', label: 'Tiết kiệm', icon: SaveMoneyIcon },
-    { url: '/category/near-sea', label: 'Gần biển', icon: ViewBienIcon },
+    { url: '/category?category=homestay', label: 'Home Stay', icon: HomeStayIcon },
+    { url: '/category?category=hotel', label: 'Khách sạn', icon: HotelIcon },
+    { url: '/category?category=mostlike', label: 'Yêu thích nhất', icon: MostLikeIcon },
+    { url: '/category?category=savemoney', label: 'Tiết kiệm', icon: SaveMoneyIcon },
+    { url: '/category?category=nearsea', label: 'Gần biển', icon: ViewBienIcon },
 ];
 
 const HeaderTop = () => {
+
+    const { showBeforeTax, setShowBeforeTax } = useContext(AuthContext);
+
+    const location = useLocation();
+    const currentCategory = new URLSearchParams(location.search).get('category') || 'all';
+
     return (
         <div className="stonehnh-header">
             {/* Top Header */}
@@ -87,21 +94,22 @@ const HeaderTop = () => {
             {/* Category Bar */}
             <div className="category-bar">
                 <div className="categories">
-                    {categories.map((cat, idx) => (
-                        <NavLink
-                            key={idx}
-                            to={cat.url}
-                            className={({ isActive }) =>
-                                `category-item ${isActive ? 'active-category' : ''}`
-                            }
-                            end
-                        >
-                            <div className="category-content">
-                                <img src={cat.icon} alt={cat.label} className="category-icon" />
-                                <span className="category-label">{cat.label}</span>
-                            </div>
-                        </NavLink>
-                    ))}
+                    {categories.map((cat, idx) => {
+                        const targetCategory = new URLSearchParams(cat.url.split('?')[1]).get('category');
+
+                        return (
+                            <NavLink
+                                key={idx}
+                                to={cat.url}
+                                className={`category-item ${currentCategory === targetCategory ? 'active-category' : ''}`}
+                            >
+                                <div className="category-content">
+                                    <img src={cat.icon} alt={cat.label} className="category-icon" />
+                                    <span className="category-label">{cat.label}</span>
+                                </div>
+                            </NavLink>
+                        );
+                    })}
                 </div>
 
                 <div className="filter-section">
@@ -110,6 +118,8 @@ const HeaderTop = () => {
                         <Switch
                             checkedChildren={<CheckOutlined />}
                             unCheckedChildren={<CloseOutlined />}
+                            checked={showBeforeTax}
+                            onClick={() => { setShowBeforeTax(!showBeforeTax) }}
                         />
                         <span>Hiện giá trước thuế</span>
                     </div>

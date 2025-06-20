@@ -43,7 +43,7 @@ const router = createBrowserRouter([
           </PrivateRoute>
       },
       {
-        path: "/category/home-stay",
+        path: "/category",
         element: <HomestayPage />
       }
     ]

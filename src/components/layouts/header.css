@@ -55,6 +55,24 @@
     width: 300px;
 }
 
+.ant-dropdown-menu {
+    font-size: 20px;
+    min-width: 200px;
+}
+
+.ant-dropdown-menu-item {
+    padding: 10px 20px;
+}
+
+.ant-dropdown-menu-title-content {
+    font-size: 20px;
+}
+
+.ant-dropdown-menu-title-content a {
+    font-size: 16px;
+    text-decoration-line: none;
+}
+
 .host-link {
     font-weight: bold;
     color: black;

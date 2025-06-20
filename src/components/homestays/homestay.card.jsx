@@ -11,6 +11,7 @@ import {
 import { Button, Card, Tag, Typography } from 'antd';
 import { useContext, useState } from 'react';
 import './HomestayCard.css';
+import { AuthContext } from '../context/auth.context';
 
 const { Title, Text } = Typography;
 
@@ -19,6 +20,16 @@ const HomestayCard = ({ data }) => {
     const [liked, setLiked] = useState(true);
 
     const listImg = (data.imageList).split(',');
+
+    const { showBeforeTax } = useContext(AuthContext);
+
+    // Take finalPrice on toggle show tax
+    let finalPrice = data.dailyPrice;
+    if (showBeforeTax === true) {
+        finalPrice = data.dailyPrice * 0.92
+    } else {
+        finalPrice = data.dailyPrice
+    }
 
     const formatCurrency = (number) => {
         return number.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
@@ -33,7 +44,7 @@ const HomestayCard = ({ data }) => {
                     <div className="cover-container">
                         <img
                             alt={data.areaAddress}
-                            src={`/images/HomeStay/penhouse/${listImg[0]}`}
+                            src={`/images/HomeStay/${data.homestayName}/${listImg[0]}`}
                             className="cover-image"
                         />
                         <button
@@ -74,7 +85,7 @@ const HomestayCard = ({ data }) => {
                 <div className="price-book">
                     <div>
                         <Text type="secondary">Giá từ </Text>
-                        <Text strong className="price">{formatCurrency(data.dailyPrice)}/Ngày</Text>
+                        <Text strong className="price">{formatCurrency(finalPrice)}/Ngày</Text>
                     </div>
                     <Button type="primary">Đặt ngay</Button>
                 </div>

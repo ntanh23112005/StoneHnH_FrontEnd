@@ -1,5 +1,4 @@
 import { ArrowRightOutlined } from "@ant-design/icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Marquee from "react-fast-marquee";
 import { useNavigate } from "react-router-dom";
 
@@ -49,7 +48,7 @@ const HomeCarousel = () => {
             }}>
                 {/* Nút bên dưới */}
                 <button
-                    onClick={() => navigate("/category/home-stay")}
+                    onClick={() => navigate("/category?category=all")}
                     style={{
                         marginTop: "40px",
                         padding: "18px 50px",
