@@ -7,6 +7,8 @@ const fetchAllHomeStayAPI = (category, current) => {
 
 const getHomestayForDetailById = (id) => {
     const URL_BACKEND = `/api/v1/homestay/${id}`;
-    return axios.get(URL_BACKEND, id)
-}
-export { fetchAllHomeStayAPI }
+    return axios.get(URL_BACKEND);
+};
+
+export { fetchAllHomeStayAPI, getHomestayForDetailById };
+
