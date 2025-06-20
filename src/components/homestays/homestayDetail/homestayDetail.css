@@ -1,0 +1,38 @@
+.homestay-summary-card {
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    margin-bottom: 32px;
+}
+
+.summary-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.summary-main-info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    margin-top: 8px;
+}
+
+.summary-info-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+    color: #374151;
+}
+
+.summary-icon {
+    font-size: 18px;
+    color: #1890ff;
+}
+
+.summary-tags {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}

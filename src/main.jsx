@@ -8,17 +8,15 @@ import {
 import App from './App.jsx';
 import { AuthWrapper } from './components/context/auth.context.jsx';
 import ErrorPage from './components/layouts/Error.jsx';
-import TodoApp from './components/todo/TodoApp.jsx';
 import BookPage from './pages/book.jsx';
+import HomePage from './pages/home.jsx';
 import HomestayPage from './pages/homestay.jsx';
+import HomestayDetailPage from './pages/homestayDetail.jsx';
 import LoginPage from './pages/login.jsx';
 import PrivateRoute from './pages/private.route.jsx';
 import RegisterPage from './pages/register.jsx';
 import UserPage from './pages/user.jsx';
-import './styles/global.css'
-import 'nprogress/nprogress.css';
-import 'nprogress/nprogress.js';
-import HomePage from './pages/home.jsx';
+import './styles/global.css';
 
 const router = createBrowserRouter([
   {
@@ -45,6 +43,10 @@ const router = createBrowserRouter([
       {
         path: "/category",
         element: <HomestayPage />
+      },
+      {
+        path: "/detail/home-stay/:id",
+        element: <HomestayDetailPage />
       }
     ]
   },
