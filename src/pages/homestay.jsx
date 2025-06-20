@@ -1,9 +1,9 @@
-import { Breadcrumb, Pagination } from 'antd';
-import HomestayList from '../components/homestays/homestay.list';
 import { FilterOutlined, HomeOutlined } from '@ant-design/icons';
+import { Breadcrumb, Pagination } from 'antd';
 import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import HomestayList from '../components/homestays/homestay.list';
 import { fetchAllHomeStayAPI } from '../services/homestay/homestay.api';
-import { Link, useLocation } from 'react-router-dom';
 
 const HomestayPage = () => {
 
