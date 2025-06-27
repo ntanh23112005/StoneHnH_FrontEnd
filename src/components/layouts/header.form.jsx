@@ -1,5 +1,5 @@
-import React, { useContext, useEffect } from 'react';
-import { Input, Button, Switch, Dropdown, Avatar } from 'antd';
+import { useContext } from 'react';
+import { Input, Button, Switch, Dropdown, Avatar, message } from 'antd';
 import {
     SearchOutlined,
     FilterOutlined,
@@ -8,41 +8,74 @@ import {
     CheckOutlined,
     CloseOutlined
 } from '@ant-design/icons';
-import { Link, NavLink, useLocation } from 'react-router-dom';
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import './header.css';
 
-import ahi from '../../assets/react.svg';
-import HomeStayIcon from '../../assets/menu-bar/home-stay.svg';
-import HotelIcon from '../../assets/menu-bar/hotel.svg';
-import MostLikeIcon from '../../assets/menu-bar/most-like.svg';
-import SaveMoneyIcon from '../../assets/menu-bar/save-money.svg';
-import ViewBienIcon from '../../assets/menu-bar/view-bien.svg';
 import { AuthContext } from '../context/auth.context';
-
-const userMenuItems = [
-    {
-        key: '1',
-        label: <Link to="/profile">Hồ sơ</Link>,
-    },
-    {
-        key: '2',
-        label: <Link to="/settings">Cài đặt</Link>,
-    },
-    {
-        key: '3',
-        label: <Link to="/logout">Đăng xuất</Link>,
-    },
-];
+import { logoutAPI } from '../../services/auth/api.auth';
+import { Icons } from '../../constants/icons';
 
 const categories = [
-    { url: '/category?category=homestay', label: 'Home Stay', icon: HomeStayIcon },
-    { url: '/category?category=hotel', label: 'Khách sạn', icon: HotelIcon },
-    { url: '/category?category=mostlike', label: 'Yêu thích nhất', icon: MostLikeIcon },
-    { url: '/category?category=savemoney', label: 'Tiết kiệm', icon: SaveMoneyIcon },
-    { url: '/category?category=nearsea', label: 'Gần biển', icon: ViewBienIcon },
+    { url: '/category?category=homestay', label: 'Home Stay', icon: Icons.homeStay },
+    { url: '/category?category=hotel', label: 'Khách sạn', icon: Icons.hotel },
+    { url: '/category?category=mostlike', label: 'Yêu thích nhất', icon: Icons.mostLike },
+    { url: '/category?category=savemoney', label: 'Tiết kiệm', icon: Icons.saveMoney },
+    { url: '/category?category=nearsea', label: 'Gần biển', icon: Icons.viewBien },
 ];
 
 const HeaderTop = () => {
+    const navigate = useNavigate()
+
+    const { user, setUser } = useContext(AuthContext)
+
+
+    const isLoggedIn = !!user;
+    const getUserMenuItems = () => {
+        if (!isLoggedIn) {
+            return [
+                {
+                    key: 'login',
+                    label: <Link to="/login">Đăng nhập</Link>,
+                },
+            ];
+        }
+
+        return [
+            {
+                key: 'profile',
+                label: <Link to="/profile">Hồ sơ</Link>,
+            },
+            {
+                key: 'settings',
+                label: <Link to="/settings">Cài đặt</Link>,
+            },
+            {
+                key: 'logout',
+                label: <Link onClick={(e) => {
+                    e.preventDefault()
+                    handleLogout()
+                }}>Đăng xuất</Link>,
+            },
+        ];
+    };
+
+
+    const handleLogout = async () => {
+        try {
+            const res = await logoutAPI()
+            // console.log(res);
+            if (res.data.message) {
+                localStorage.removeItem("access_token");
+                setUser(null);
+
+                message.success("Đăng xuất thành công")
+                navigate("/");
+            }
+        } catch (err) {
+            console.warn("Logout error:", err);
+            // không cần block, vẫn tiếp tục xoá local
+        }
+    }
 
     const { showBeforeTax, setShowBeforeTax } = useContext(AuthContext);
 
@@ -54,7 +87,9 @@ const HeaderTop = () => {
             {/* Top Header */}
             <div className="header-top">
                 {/* Logo */}
-                <div><Link to={'/'} style={{ textDecoration: 'none' }}>STONEHNH</Link></div>
+                <div><Link to={'/'} style={{ textDecoration: 'none' }}>
+                    <img src="/src/assets/logo/logo stone-03.svg" alt="" style={{ width: "250px", height: "100px" }} />
+                </Link></div>
 
                 {/* Search Bar */}
                 <div className="search-bar">
@@ -79,13 +114,26 @@ const HeaderTop = () => {
                 <div className="user-section">
                     <Link to="/" className="host-link">Đón tiếp khách</Link>
                     <Dropdown
-                        menu={{ items: userMenuItems }}
+                        key={user ? user.email : 'guest'}
+                        menu={{ items: getUserMenuItems() }}
                         trigger={['click']}
                         placement="bottomRight"
                     >
                         <div className="user-menu">
                             <MenuOutlined style={{ fontSize: 20 }} />
-                            <Avatar src={ahi} icon={<UserOutlined />} style={{ backgroundColor: '#ccc' }} />
+                            <Avatar
+                                src={
+                                    user?.customerPicture
+                                        ? (
+                                            /^https?:\/\//.test(user.customerPicture)
+                                                ? user.customerPicture
+                                                : "/images/avatar/" + user.customerPicture.replace(/^\/+/, "")
+                                        )
+                                        : null
+                                }
+                                icon={<UserOutlined />}
+                                style={{ backgroundColor: '#ccc' }}
+                            />
                         </div>
                     </Dropdown>
                 </div>

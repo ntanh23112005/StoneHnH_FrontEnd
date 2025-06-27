@@ -17,7 +17,49 @@ import PrivateRoute from './pages/private.route.jsx';
 import RegisterPage from './pages/register.jsx';
 import UserPage from './pages/user.jsx';
 import './styles/global.css';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
+// const router = createBrowserRouter([
+//   {
+//     path: "/",
+//     element: <App />,
+//     errorElement: <ErrorPage />,
+//     children: [
+//       {
+//         index: true,
+//         // element: <TodoApp />,
+//         element: <HomePage />
+//       },
+//       {
+//         path: "/users",
+//         element: <UserPage />
+//       },
+//       {
+//         path: "/books",
+//         element:
+//           <PrivateRoute>
+//             <BookPage />
+//           </PrivateRoute>
+//       },
+//       {
+//         path: "/category",
+//         element: <HomestayPage />
+//       },
+//       {
+//         path: "/detail/home-stay/:id",
+//         element: <HomestayDetailPage />
+//       }
+//     ]
+//   },
+//   {
+//     path: "/login",
+//     element: <LoginPage />
+//   },
+//   {
+//     path: "/register",
+//     element: <RegisterPage />
+//   },
+// ]);
 const router = createBrowserRouter([
   {
     path: "/",
@@ -26,19 +68,23 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        // element: <TodoApp />,
         element: <HomePage />
       },
       {
         path: "/users",
-        element: <UserPage />
+        element: (
+          <PrivateRoute allowedRoles={["ROLE_ADMIN"]}>
+            <UserPage />
+          </PrivateRoute>
+        )
       },
       {
         path: "/books",
-        element:
+        element: (
           <PrivateRoute>
             <BookPage />
           </PrivateRoute>
+        )
       },
       {
         path: "/category",
@@ -56,15 +102,19 @@ const router = createBrowserRouter([
   },
   {
     path: "/register",
-    element: <RegisterPage />
+    element: (
+      <RegisterPage />
+    )
   },
 ]);
 
-
 ReactDOM.createRoot(document.getElementById('root')).render(
   // <React.StrictMode>
-  <AuthWrapper>
-    <RouterProvider router={router} />
-  </AuthWrapper>
+  <GoogleOAuthProvider clientId="103379412399-bqodeo39itadsdjvmf1i29rg3av6uctb.apps.googleusercontent.com">
+    <AuthWrapper>
+      <RouterProvider router={router} />
+    </AuthWrapper>
+  </GoogleOAuthProvider>
   // </React.StrictMode>
+
 )

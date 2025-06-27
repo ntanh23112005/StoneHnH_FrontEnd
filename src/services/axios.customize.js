@@ -8,7 +8,8 @@ NProgress.configure({
 
 
 const instance = axios.create({
-    baseURL: import.meta.env.VITE_BACKEND_URL
+    baseURL: import.meta.env.VITE_BACKEND_URL,
+    withCredentials: true
 });
 
 // Alter defaults after instance has been created
@@ -17,7 +18,9 @@ const instance = axios.create({
 // Add a request interceptor
 instance.interceptors.request.use(function (config) {
     NProgress.start();
-    if (typeof window !== "undefined" && window
+    if (
+        typeof window !== "undefined"
+        && window
         && window.localStorage
         && window.localStorage.getItem('access_token')) {
         config.headers.Authorization = 'Bearer ' + window.localStorage.getItem('access_token');
@@ -40,12 +43,47 @@ instance.interceptors.response.use(function (response) {
 
     return response;
 
-}, function (error) {
+}, async function (error) {
     NProgress.done();
-    // Any status codes that falls outside the range of 2xx cause this function to trigger
-    // Do something with response error
+
+    // const originalRequest = error.config;
+
+    // // ✅ Nếu bị 401 (Unauthorized) và chưa thử refresh
+    // if (
+    //     error.response &&
+    //     error.response.status === 401 &&
+    //     !originalRequest._retry
+    // ) {
+    //     originalRequest._retry = true;
+
+    //     try {
+    //         // API refresh - phải enable withCredentials để gửi cookie
+    //         const res = await instance.get("/api/auth/refresh", {
+    //             withCredentials: true,
+    //         });
+
+    //         const newAccessToken = res.data?.accessToken;
+    //         if (newAccessToken) {
+    //             localStorage.setItem("access_token", newAccessToken);
+
+    //             // gắn token mới vào request cũ
+    //             originalRequest.headers.Authorization = "Bearer " + newAccessToken;
+
+    //             // retry lại request gốc
+    //             return instance(originalRequest);
+    //         }
+    //     } catch (refreshError) {
+    //         // nếu refresh cũng fail -> redirect hoặc logout
+    //         localStorage.removeItem("access_token");
+    //         window.location.href = "/login";
+    //         return Promise.reject(refreshError);
+    //     }
+    // }
+
+    // nếu lỗi khác → trả lỗi như cũ
     if (error.response && error.response.data) return error.response.data;
     return Promise.reject(error);
-});
+}
+);
 
 export default instance;

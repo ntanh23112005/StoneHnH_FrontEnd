@@ -7,10 +7,10 @@ const BookPage = () => {
     return (
         <>
             <div style={{ padding: "20px" }}>
+                books page
+                {/* <BookForm />
 
-                <BookForm />
-
-                <BookTable />
+                <BookTable /> */}
             </div>
         </>
     )
