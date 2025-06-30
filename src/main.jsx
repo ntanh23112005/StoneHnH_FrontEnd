@@ -1,3 +1,4 @@
+import { GoogleOAuthProvider } from '@react-oauth/google';
 import 'nprogress/nprogress.css';
 import 'nprogress/nprogress.js';
 import ReactDOM from 'react-dom/client';
@@ -15,9 +16,9 @@ import HomestayDetailPage from './pages/homestayDetail.jsx';
 import LoginPage from './pages/login.jsx';
 import PrivateRoute from './pages/private.route.jsx';
 import RegisterPage from './pages/register.jsx';
+import ResetPasswordPage from "./pages/resetPasswordPage.jsx";
 import UserPage from './pages/user.jsx';
 import './styles/global.css';
-import { GoogleOAuthProvider } from '@react-oauth/google';
 
 // const router = createBrowserRouter([
 //   {
@@ -104,6 +105,12 @@ const router = createBrowserRouter([
     path: "/register",
     element: (
       <RegisterPage />
+    )
+  },
+  {
+    path: "/reset-password",
+    element: (
+      <ResetPasswordPage />
     )
   },
 ]);
