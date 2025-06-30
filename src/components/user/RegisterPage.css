@@ -1,0 +1,129 @@
+/* Nền gradient */
+.gradient-bg {
+    margin-top: 40px;
+    margin-bottom: 40px;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Container form đẹp hơn */
+.form-container {
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    border-radius: 1rem;
+    padding: 2rem;
+    background-color: white;
+    width: 100%;
+    max-width: 500px;
+}
+
+.form-container:hover {
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+/* Tiêu đề */
+.form-title {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #4c1d95;
+}
+
+/* Input focus */
+.custom-input:focus,
+.ant-input:focus,
+.ant-input-password input:focus {
+    border-color: #667eea !important;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+}
+
+/* Nút chính */
+.button-primary {
+    background-color: #7c3aed;
+    border: none;
+    color: white;
+}
+
+.button-primary:hover {
+    background-color: #6d28d9;
+    color: white;
+}
+
+/* Nút nhỏ (Gửi mã, Xác thực) */
+.button-small {
+    padding: 0.4rem 0.75rem;
+    font-size: 0.875rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+/* Badge đã xác thực */
+.verification-badge {
+    color: #16a34a;
+    font-weight: 500;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Link đăng nhập */
+.login-link {
+    color: #7c3aed;
+    font-weight: 500;
+}
+
+.login-link:hover {
+    color: #6d28d9;
+}
+
+/* Dòng nút */
+.button-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1rem;
+}
+
+body {
+    background: ghostwhite;
+}
+
+.custom-otp-input {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.custom-otp-input .ant-input {
+    width: 50px !important;
+    height: 60px;
+    font-size: 22px;
+    font-weight: 500;
+    text-align: center;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    transition: all 0.3s;
+}
+
+.custom-otp-input .ant-input:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.custom-otp-input .ant-input:hover {
+    border-color: #3b82f6;
+}
