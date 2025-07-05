@@ -1,5 +1,5 @@
-import { Col, Divider, Row, Spin } from "antd";
-import { useEffect, useState } from "react";
+import { Breadcrumb, Button, Col, Divider, Row, Spin } from "antd";
+import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import HomestayAmenities from "../components/homestays/homestayDetail/homestayDescription/homestayAmenities";
 import HomestayHeader from "../components/homestays/homestayDetail/homestayHeader";
@@ -12,11 +12,16 @@ import SafetyInfo from "../components/homestays/homestayDetail/homestayRulesAndP
 import HomestaySummary from "../components/homestays/homestayDetail/homestaySummary";
 import HostInfo from "../components/homestays/homestayDetail/hostInfo";
 import { getHomestayForDetailById } from "../services/homestay/homestay.api";
+import BookingPopup from "../components/homestays/homestayDetail/BookingPopup";
+import { FilterOutlined, HomeOutlined } from "@ant-design/icons";
+import { AuthContext } from "../components/context/auth.context"
 
 const HomestayDetailPage = () => {
     const { id } = useParams();
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [openBooking, setOpenBooking] = useState(false);
+    const { user } = useContext(AuthContext);
 
     useEffect(() => {
         const fetchDetail = async () => {
@@ -37,30 +42,30 @@ const HomestayDetailPage = () => {
     if (loading || !data) return <Spin fullscreen />;
 
     const {
-    homestay,
-    homestayRule,
-    images,
-    customer,
-    reviews,
-    rates,
-} = data;
+        homestay,
+        homestayRule,
+        images,
+        customer,
+        reviews,
+        rates,
+    } = data;
 
-// Gộp toàn bộ ảnh từ các object trong mảng images
-// Gộp toàn bộ chuỗi ảnh từ tất cả object
-// Gộp toàn bộ homestayImage thành một chuỗi duy nhất
-const mergedImageString = images
-    .map((img) => img?.homestayImage)         // lấy từng chuỗi ảnh
-    .filter((imgStr) => typeof imgStr === "string" && imgStr.trim() !== "") // lọc ra chuỗi hợp lệ
-    .join(",");                               // nối chuỗi
+    // Gộp toàn bộ ảnh từ các object trong mảng images
+    // Gộp toàn bộ chuỗi ảnh từ tất cả object
+    // Gộp toàn bộ homestayImage thành một chuỗi duy nhất
+    const mergedImageString = images
+        .map((img) => img?.homestayImage)         // lấy từng chuỗi ảnh
+        .filter((imgStr) => typeof imgStr === "string" && imgStr.trim() !== "") // lọc ra chuỗi hợp lệ
+        .join(",");                               // nối chuỗi
 
-// Tách ra thành mảng ảnh, loại bỏ chuỗi trống
-const mainImages = mergedImageString
-    .split(",")
-    .map((img) => img.trim())
-    .filter((img) => img !== "");
+    // Tách ra thành mảng ảnh, loại bỏ chuỗi trống
+    const mainImages = mergedImageString
+        .split(",")
+        .map((img) => img.trim())
+        .filter((img) => img !== "");
 
-    console.log("mergedImageString:", mergedImageString);
-console.log("mainImages:", mainImages);
+    // console.log("mergedImageString:", mergedImageString);
+    // console.log("mainImages:", mainImages);
 
 
     // Tách thông tin an toàn từ ruleText
@@ -73,6 +78,37 @@ console.log("mainImages:", mainImages);
 
     return (
         <div style={{ padding: "24px 48px" }}>
+            <div style={{ padding: '12px' }}>
+                <Breadcrumb
+                    items={[
+                        {
+                            href: '/',
+                            title: (
+                                <div style={{ fontSize: '16px', marginRight: '5px', display: 'flex', gap: 5 }}>
+                                    <span>Trang chủ</span>
+                                </div>
+                            ),
+                        },
+                        {
+                            href: '/category?category=all',
+                            title: (
+                                <div style={{ fontSize: '16px', marginRight: '5px', display: 'flex', gap: 5 }}>
+                                    <FilterOutlined />
+                                    <span>Danh mục</span>
+                                </div>
+                            ),
+                        },
+                        {
+                            title: (
+                                <div style={{ fontSize: '16px', marginRight: '5px', display: 'flex', gap: 5 }}>
+                                    <HomeOutlined />
+                                    <span>{homestay.homestayName}</span>
+                                </div>
+                            ),
+                        },
+                    ]}
+                />
+            </div>
             {/* Header */}
             <HomestayHeader
                 name={homestay.homestayName}
@@ -122,26 +158,46 @@ console.log("mainImages:", mainImages);
 
             <Divider />
 
+            <Divider />
+
             {/* Đánh giá */}
-            <h2>Đánh giá từ khách</h2>
-            {rates.map((rate) => (
-                <ReviewItem
-                    key={rate.rateId}
-                    reviewerName={
-                        customer.customerId === rate.customerId
-                            ? customer.customerName
-                            : "Ẩn danh"
-                    }
-                    reviewerAvatar={
-                        customer.customerId === rate.customerId
-                            ? customer.customerPicture
-                            : null
-                    }
-                    content={rate.comments}
-                    rating={rate.averageRate}
-                    date={rate.ratedTime}
-                />
-            ))}
+            <h2 style={{ color: "#4266b3", fontWeight: 600, marginBottom: 16 }}>
+                Đánh giá từ khách
+            </h2>
+
+            {(!rates || rates.length === 0) ? (
+                <div
+                    style={{
+                        padding: "24px",
+                        backgroundColor: "#f5f7fb",
+                        borderRadius: 8,
+                        textAlign: "center",
+                        color: "#999",
+                    }}
+                >
+                    Hiện chưa có đánh giá nào cho homestay này.
+                </div>
+            ) : (
+                rates.map((rate) => (
+                    <ReviewItem
+                        key={rate.rateId}
+                        reviewerName={
+                            customer.customerId === rate.customerId
+                                ? customer.customerName
+                                : "Ẩn danh"
+                        }
+                        reviewerAvatar={
+                            customer.customerId === rate.customerId
+                                ? customer.customerPicture
+                                : null
+                        }
+                        content={rate.comments}
+                        rating={rate.averageRate}
+                        date={rate.ratedTime}
+                    />
+                ))
+            )}
+
 
             <Divider />
 
@@ -163,6 +219,37 @@ console.log("mainImages:", mainImages);
                     </Col>
                 ))}
             </Row> */}
+
+            {/* Nút đặt phòng */}
+            <Button
+                type="primary"
+                size="large"
+                onClick={() => setOpenBooking(true)}
+                style={{
+                    position: "fixed",
+                    bottom: "100px",
+                    right: "24px",
+                    zIndex: 1000,
+                    borderRadius: "24px",
+                    padding: "0 24px",
+                    height: "48px",
+                    backgroundColor: "#4266b3",
+                    borderColor: "#4266b3",
+                }}
+            >
+                Đặt phòng ngay
+            </Button>
+
+            {/* Popup đặt phòng */}
+            <BookingPopup
+                open={openBooking}
+                onClose={() => setOpenBooking(false)}
+                dailyPrice={homestay.dailyPrice}
+                maxCustomer={homestay.maxCustomer}
+                homestay={data.homestay}
+                customerId={user.customerId}
+            />
+
         </div>
     );
 };

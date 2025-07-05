@@ -2,12 +2,17 @@ import './components/todo/todo.css';
 import Header from './components/layouts/Header';
 import Footer from './components/layouts/Footer';
 import { Outlet } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+
+import 'react-date-range/dist/styles.css';
+import 'react-date-range/dist/theme/default.css';
+
 
 import AOS from 'aos';
 import 'aos/dist/aos.css';
-import { GoogleOAuthProvider } from '@react-oauth/google';
+import { getAccountAPI } from './services/auth/api.auth';
+import { AuthContext } from './components/context/auth.context';
 
 const App = () => {
 
@@ -21,11 +26,9 @@ const App = () => {
 
   return (
     <>
-
       <Header />
       <Outlet />
       <Footer />
-
     </>
   )
 }

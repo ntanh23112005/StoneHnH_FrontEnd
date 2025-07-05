@@ -14,37 +14,37 @@ const HomestayHeader = ({ name, location, price, images = [] }) => {
     const safeName = encodeURIComponent(name);
     const getImagePath = (fileName) => `/images/HomeStay/${safeName}/${fileName}`;
 
-    // Tách 1 ảnh đầu làm ảnh chính, còn lại là ảnh nhỏ
     const mainImage = images[0];
     const smallImages = images.slice(1, 5);
 
     return (
         <div style={{ marginBottom: 32 }}>
-            <Title level={2}>{name}</Title>
-
-            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                <EnvironmentOutlined style={{ color: "#555" }} />
+            <Title level={2} style={{ marginBottom: 4 }}>
+                {name}
+            </Title>
+            <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 8 }}>
+                <EnvironmentOutlined style={{ color: "#4266b3" }} />
                 <Text type="secondary">{location}</Text>
             </div>
-
-            <div style={{ marginTop: 8, marginBottom: 16 }}>
-                <Text strong style={{ fontSize: 18 }}>
-                    {price.toLocaleString("vi-VN")}₫ / đêm
-                </Text>
-            </div>
+            <Text strong style={{ fontSize: 18, color: "#4266b3" }}>
+                {price.toLocaleString("vi-VN")}₫ / đêm
+            </Text>
 
             <Image.PreviewGroup>
-                <Row gutter={16}>
+                <Row gutter={16} style={{ marginTop: 16 }}>
                     <Col span={12}>
                         <Image
                             src={getImagePath(mainImage)}
                             alt={`Ảnh chính của ${name}`}
                             width="100%"
                             height={400}
-                            style={{ objectFit: "cover", borderRadius: 8 }}
+                            style={{
+                                objectFit: "cover",
+                                borderRadius: 12,
+                                boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+                            }}
                         />
                     </Col>
-
                     <Col span={12}>
                         <div
                             style={{
@@ -63,7 +63,7 @@ const HomestayHeader = ({ name, location, price, images = [] }) => {
                                         width: "100%",
                                         height: "100%",
                                         overflow: "hidden",
-                                        borderRadius: 6,
+                                        borderRadius: 8,
                                     }}
                                 >
                                     <Image
@@ -73,7 +73,7 @@ const HomestayHeader = ({ name, location, price, images = [] }) => {
                                             width: "100%",
                                             height: "100%",
                                             objectFit: "cover",
-                                            borderRadius: 6,
+                                            borderRadius: 8,
                                         }}
                                     />
                                     {idx === 3 && (
@@ -85,20 +85,23 @@ const HomestayHeader = ({ name, location, price, images = [] }) => {
                                                 left: 0,
                                                 width: "100%",
                                                 height: "100%",
-                                                borderRadius: 6,
-                                                backgroundColor: "rgba(0, 0, 0, 0.4)",
+                                                backgroundColor: "rgba(0,0,0,0.5)",
                                                 display: "flex",
                                                 alignItems: "center",
                                                 justifyContent: "center",
                                                 cursor: "pointer",
+                                                borderRadius: 8,
+                                                transition: "background-color 0.3s",
                                             }}
                                         >
                                             <Button
                                                 icon={<PictureOutlined />}
+                                                size="large"
                                                 style={{
-                                                    backgroundColor: "#f0f0f0",
-                                                    color: "#1890ff",
-                                                    border: "none",
+                                                    backgroundColor: "#ffffff",
+                                                    color: "#4266b3",
+                                                    border: "1px solid #4266b3",
+                                                    fontWeight: 500,
                                                 }}
                                             >
                                                 Xem tất cả {images.length} ảnh
@@ -112,9 +115,8 @@ const HomestayHeader = ({ name, location, price, images = [] }) => {
                 </Row>
             </Image.PreviewGroup>
 
-            {/* Modal hiển thị tất cả ảnh */}
             <Modal
-                title="Tất cả ảnh Homestay"
+                title={<span style={{ color: "#4266b3" }}>Tất cả ảnh Homestay</span>}
                 open={isModalOpen}
                 footer={null}
                 onCancel={() => setIsModalOpen(false)}
@@ -127,7 +129,10 @@ const HomestayHeader = ({ name, location, price, images = [] }) => {
                                 src={getImagePath(img)}
                                 alt={`Ảnh ${idx + 1}`}
                                 width="100%"
-                                style={{ borderRadius: 6 }}
+                                style={{
+                                    borderRadius: 8,
+                                    boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+                                }}
                             />
                         </Col>
                     ))}

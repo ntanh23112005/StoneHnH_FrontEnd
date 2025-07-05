@@ -10,13 +10,28 @@ const HouseRules = ({ rules }) => {
     const displayedRules = showAll ? ruleItems : ruleItems.slice(0, 3);
 
     return (
-        <Card title="Nội quy homestay" style={{ marginBottom: 24 }}>
+        <Card
+            style={{
+                marginBottom: 24,
+                borderRadius: 16,
+                border: "1px solid #f0f0f0",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
+                padding: 16,
+            }}
+            title={
+                <span style={{ fontSize: 18, fontWeight: 600, color: "#4266b3" }}>
+                    Nội quy homestay
+                </span>
+            }
+        >
             <List
-                size="small"
                 dataSource={displayedRules}
                 renderItem={(item, idx) => (
-                    <List.Item>
-                        {idx + 1}. {item}
+                    <List.Item style={{ paddingLeft: 0, paddingRight: 0 }}>
+                        <span style={{ color: "#4266b3", fontWeight: 500, marginRight: 8 }}>
+                            {idx + 1}.
+                        </span>
+                        {item}
                     </List.Item>
                 )}
             />
@@ -25,6 +40,7 @@ const HouseRules = ({ rules }) => {
                     <Button
                         type="link"
                         onClick={() => setShowAll(!showAll)}
+                        style={{ color: "#4266b3" }}
                     >
                         {showAll ? "Ẩn bớt" : "Xem thêm"}
                     </Button>

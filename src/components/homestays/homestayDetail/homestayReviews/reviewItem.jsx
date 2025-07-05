@@ -10,7 +10,7 @@ const ReviewItem = ({ reviewerName, reviewerAvatar, content, rating, date }) => 
             <Space align="start">
                 <Avatar
                     size="large"
-                    src={reviewerAvatar ? `/images/${reviewerAvatar}` : null}
+                    src={reviewerAvatar ? `/images/avatar/${reviewerAvatar}` : null}
                     icon={!reviewerAvatar && <UserOutlined />}
                 />
                 <div>

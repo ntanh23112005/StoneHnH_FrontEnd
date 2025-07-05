@@ -23,6 +23,7 @@ const LoginPage = () => {
             setUser(res.data.user);
             navigate("/");
         } else {
+            console.log(res);
             notification.error({
                 message: "Error Login",
                 description: JSON.stringify(res.message)

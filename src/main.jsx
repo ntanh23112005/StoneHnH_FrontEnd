@@ -19,6 +19,7 @@ import RegisterPage from './pages/register.jsx';
 import ResetPasswordPage from "./pages/resetPasswordPage.jsx";
 import UserPage from './pages/user.jsx';
 import './styles/global.css';
+import CustomerProfile from './pages/customer.profile.jsx';
 
 // const router = createBrowserRouter([
 //   {
@@ -94,6 +95,10 @@ const router = createBrowserRouter([
       {
         path: "/detail/home-stay/:id",
         element: <HomestayDetailPage />
+      },
+      {
+        path: "/profile",
+        element: <CustomerProfile />
       }
     ]
   },

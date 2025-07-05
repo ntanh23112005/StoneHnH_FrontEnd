@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { Input, Button, Switch, Dropdown, Avatar, message } from 'antd';
 import {
     SearchOutlined,
@@ -12,7 +12,7 @@ import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import './header.css';
 
 import { AuthContext } from '../context/auth.context';
-import { logoutAPI } from '../../services/auth/api.auth';
+import { getAccountAPI, logoutAPI } from '../../services/auth/api.auth';
 import { Icons } from '../../constants/icons';
 
 const categories = [
@@ -28,6 +28,16 @@ const HeaderTop = () => {
 
     const { user, setUser } = useContext(AuthContext)
 
+    useEffect(() => {
+        getUser()
+    }, [])
+
+    const getUser = async () => {
+        const res = await getAccountAPI();
+        if (res != null) {
+            setUser(res.data);
+        }
+    }
 
     const isLoggedIn = !!user;
     const getUserMenuItems = () => {

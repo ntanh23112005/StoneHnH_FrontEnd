@@ -87,7 +87,7 @@ const HomestayCard = ({ data }) => {
                         <Text type="secondary">Giá từ </Text>
                         <Text strong className="price">{formatCurrency(finalPrice)}/Ngày</Text>
                     </div>
-                    <Button type="primary">Đặt ngay</Button>
+                    <Button style={{ backgroundColor: '#4266b3', color: 'white' }}>Đặt ngay</Button>
                 </div>
 
                 <div className="amenities">

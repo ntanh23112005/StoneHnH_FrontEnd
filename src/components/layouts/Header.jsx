@@ -91,7 +91,7 @@ const Header = () => {
 
     return (
         <>
-            <img src="images/Untitled-1.png" style={{ width: "100%", height: "250px" }} />
+            <img src="/images/banner_stonehnh.png" style={{ width: "100%", height: "350px" }} />
             <div style={{ position: "sticky", top: "0", left: "0", zIndex: "1000" }}>
                 {/* <Menu
                     onClick={onClick}
