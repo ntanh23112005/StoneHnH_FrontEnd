@@ -1,4 +1,3 @@
-import './components/todo/todo.css';
 import Header from './components/layouts/Header';
 import Footer from './components/layouts/Footer';
 import { Outlet } from 'react-router-dom';
@@ -7,6 +6,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
+import '../src/styles/global.css'
 
 
 import AOS from 'aos';

@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Input, Button, Switch, Dropdown, Avatar, message } from 'antd';
 import {
     SearchOutlined,
@@ -24,9 +24,16 @@ const categories = [
 ];
 
 const HeaderTop = () => {
-    const navigate = useNavigate()
+
+    const VITE_IMG_BACKEND_URL = import.meta.env.VITE_IMG_BACKEND_URL;
 
     const { user, setUser } = useContext(AuthContext)
+    const { showBeforeTax, setShowBeforeTax } = useContext(AuthContext);
+    const location = useLocation();
+    const currentCategory = new URLSearchParams(location.search).get('category') || 'all';
+    const [areaAddress, setAreaAddress] = useState();
+    const [maxCustomer, setMaxCustomer] = useState();
+    const navigate = useNavigate();
 
     useEffect(() => {
         getUser()
@@ -50,7 +57,7 @@ const HeaderTop = () => {
             ];
         }
 
-        return [
+        const items = [
             {
                 key: 'profile',
                 label: <Link to="/profile">Hồ sơ</Link>,
@@ -59,15 +66,32 @@ const HeaderTop = () => {
                 key: 'settings',
                 label: <Link to="/settings">Cài đặt</Link>,
             },
-            {
-                key: 'logout',
-                label: <Link onClick={(e) => {
-                    e.preventDefault()
-                    handleLogout()
-                }}>Đăng xuất</Link>,
-            },
         ];
+
+        if (Array.isArray(user?.roleName) && user.roleName.includes('ROLE_ADMIN')) {
+            items.push({
+                key: 'admin',
+                label: <Link to="/admin">Quản trị</Link>,
+            });
+        }
+
+        items.push({
+            key: 'logout',
+            label: (
+                <Link
+                    onClick={(e) => {
+                        e.preventDefault();
+                        handleLogout();
+                    }}
+                >
+                    Đăng xuất
+                </Link>
+            ),
+        });
+
+        return items;
     };
+
 
 
     const handleLogout = async () => {
@@ -79,18 +103,34 @@ const HeaderTop = () => {
                 setUser(null);
 
                 message.success("Đăng xuất thành công")
-                navigate("/");
+                // navigate("/");
             }
         } catch (err) {
             console.warn("Logout error:", err);
-            // không cần block, vẫn tiếp tục xoá local
         }
     }
 
-    const { showBeforeTax, setShowBeforeTax } = useContext(AuthContext);
+    useEffect(() => {
+        const params = new URLSearchParams(location.search);
+        const area = params.get('areaAddress') || '';
+        const customer = params.get('maxCustomer') || '';
 
-    const location = useLocation();
-    const currentCategory = new URLSearchParams(location.search).get('category') || 'all';
+        setAreaAddress(area);
+        setMaxCustomer(customer);
+    }, [location.search]);
+
+    const handleSearch = () => {
+        const currentParams = new URLSearchParams(location.search);
+        const category = currentParams.get('category') || 'all';
+
+        const newParams = new URLSearchParams();
+        newParams.set('category', category);
+        newParams.set('areaAddress', areaAddress || '');
+        newParams.set('maxCustomer', maxCustomer || 0);
+
+        navigate(`/category?${newParams.toString()}`);
+    }
+
 
     return (
         <div className="stonehnh-header">
@@ -105,24 +145,40 @@ const HeaderTop = () => {
                 <div className="search-bar">
                     <fieldset className="search-fieldset">
                         <legend className="search-legend">Địa điểm</legend>
-                        <Input placeholder="Tìm kiếm điểm đến" variant='borderless' className="search-input" />
+                        <Input
+                            placeholder="Tìm kiếm điểm đến"
+                            variant="borderless"
+                            className="search-input"
+                            value={areaAddress}
+                            onChange={(e) => setAreaAddress(e.target.value)}
+                            onPressEnter={handleSearch}
+                        />
                     </fieldset>
                     <span>|</span>
                     <fieldset className="search-fieldset">
                         <legend className="search-legend">Số lượng khách</legend>
-                        <Input placeholder="Số lượng khách hàng thuê" variant='borderless' className="search-input" />
+                        <Input
+                            placeholder="Số lượng khách hàng thuê"
+                            variant="borderless"
+                            className="search-input"
+                            value={maxCustomer}
+                            onChange={(e) => setMaxCustomer(e.target.value)}
+                            onPressEnter={handleSearch}
+                        />
                     </fieldset>
                     <Button
                         shape="circle"
                         type="primary"
                         icon={<SearchOutlined />}
                         style={{ backgroundColor: '#0079b5', borderColor: '#0079b5' }}
+                        onClick={handleSearch}
+                        onPressEnter={handleSearch}
                     />
                 </div>
 
-                {/* Host & User */}
+                {/* Admin & Host & User */}
                 <div className="user-section">
-                    <Link to="/" className="host-link">Đón tiếp khách</Link>
+                    <Link to="/owner" className="host-link">Đón tiếp khách</Link>
                     <Dropdown
                         key={user ? user.email : 'guest'}
                         menu={{ items: getUserMenuItems() }}
@@ -137,7 +193,7 @@ const HeaderTop = () => {
                                         ? (
                                             /^https?:\/\//.test(user.customerPicture)
                                                 ? user.customerPicture
-                                                : "/images/avatar/" + user.customerPicture.replace(/^\/+/, "")
+                                                : `${VITE_IMG_BACKEND_URL}/avatar/${user.customerPicture.replace(/^\/+/, "")}?t=${Date.now()}`
                                         )
                                         : null
                                 }
@@ -171,7 +227,6 @@ const HeaderTop = () => {
                 </div>
 
                 <div className="filter-section">
-                    <Button size="large" icon={<FilterOutlined />}>Bộ lọc</Button>
                     <div className="price-toggle">
                         <Switch
                             checkedChildren={<CheckOutlined />}

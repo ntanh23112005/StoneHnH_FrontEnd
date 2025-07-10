@@ -41,11 +41,11 @@ const PrivateRoute = ({ allowedRoles, children }) => {
             <Result
                 status="403"
                 title="Unauthorized!"
-                subTitle="You need to login to access this page."
+                subTitle="Bạn cần đăng nhập để truy cập trang này"
                 extra={
                     <Button type="primary">
                         <Link to="/login">
-                            <span>Go to Login</span>
+                            <span>Tới trang đăng nhập</span>
                         </Link>
                     </Button>
                 }
@@ -61,7 +61,7 @@ const PrivateRoute = ({ allowedRoles, children }) => {
                 <Result
                     status="403"
                     title="Forbidden!"
-                    subTitle="You do not have permission to access this page."
+                    subTitle="Bạn không đủ quyền hạn để truy cập trang này"
                     extra={
                         <Button type="primary">
                             <Link to="/">

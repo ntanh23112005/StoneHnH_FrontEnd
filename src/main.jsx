@@ -9,7 +9,6 @@ import {
 import App from './App.jsx';
 import { AuthWrapper } from './components/context/auth.context.jsx';
 import ErrorPage from './components/layouts/Error.jsx';
-import BookPage from './pages/book.jsx';
 import HomePage from './pages/home.jsx';
 import HomestayPage from './pages/homestay.jsx';
 import HomestayDetailPage from './pages/homestayDetail.jsx';
@@ -20,48 +19,12 @@ import ResetPasswordPage from "./pages/resetPasswordPage.jsx";
 import UserPage from './pages/user.jsx';
 import './styles/global.css';
 import CustomerProfile from './pages/customer.profile.jsx';
+import UserAdminPage from './pages/admin/user.management.jsx';
+import BookingAdminPage from './pages/admin/booking.management.jsx';
+import HomestayAdminPage from './pages/admin/homestay.management.jsx';
+import AdminLayout from './components/layouts/admin/AdminLayout.jsx';
+import OverviewAdminPage from './pages/admin/overview.jsx';
 
-// const router = createBrowserRouter([
-//   {
-//     path: "/",
-//     element: <App />,
-//     errorElement: <ErrorPage />,
-//     children: [
-//       {
-//         index: true,
-//         // element: <TodoApp />,
-//         element: <HomePage />
-//       },
-//       {
-//         path: "/users",
-//         element: <UserPage />
-//       },
-//       {
-//         path: "/books",
-//         element:
-//           <PrivateRoute>
-//             <BookPage />
-//           </PrivateRoute>
-//       },
-//       {
-//         path: "/category",
-//         element: <HomestayPage />
-//       },
-//       {
-//         path: "/detail/home-stay/:id",
-//         element: <HomestayDetailPage />
-//       }
-//     ]
-//   },
-//   {
-//     path: "/login",
-//     element: <LoginPage />
-//   },
-//   {
-//     path: "/register",
-//     element: <RegisterPage />
-//   },
-// ]);
 const router = createBrowserRouter([
   {
     path: "/",
@@ -81,14 +44,6 @@ const router = createBrowserRouter([
         )
       },
       {
-        path: "/books",
-        element: (
-          <PrivateRoute>
-            <BookPage />
-          </PrivateRoute>
-        )
-      },
-      {
         path: "/category",
         element: <HomestayPage />
       },
@@ -98,7 +53,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/profile",
-        element: <CustomerProfile />
+        element: (
+          <PrivateRoute>
+            <CustomerProfile />
+          </PrivateRoute>
+        )
       }
     ]
   },
@@ -117,6 +76,20 @@ const router = createBrowserRouter([
     element: (
       <ResetPasswordPage />
     )
+  },
+  {
+    path: "/admin",
+    element: (
+      <PrivateRoute allowedRoles={["ROLE_ADMIN"]}>
+        <AdminLayout />
+      </PrivateRoute>
+    ),
+    children: [
+      { index: true, path: "", element: <OverviewAdminPage /> },
+      { path: "users", element: <UserAdminPage /> },
+      { path: "bookings", element: <BookingAdminPage /> },
+      { path: "homestays", element: <HomestayAdminPage /> },
+    ],
   },
 ]);
 

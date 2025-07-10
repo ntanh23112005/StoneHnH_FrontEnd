@@ -5,7 +5,7 @@ import '../components/home/home.explore.css';
 
 const HomePage = () => {
     return (
-        <Container fluid className="py-4 home-page-container">
+        <Container fluid className="py-4 home-page-container" style={{ backgroundColor: "#ffffff" }}>
             <div className="mb-5">
                 <HomeExplore />
             </div>

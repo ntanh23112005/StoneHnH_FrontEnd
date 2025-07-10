@@ -1,6 +1,6 @@
 import { ArrowRightOutlined } from "@ant-design/icons";
 import { Button, Divider, Form, Input, message, notification, Row, Col, Typography, Space, Card } from "antd";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { LoginGoogleAPI, LoginUserAPI } from "../services/auth/api.auth.js";
 import { useState, useContext } from "react";
 import { AuthContext } from '../components/context/auth.context';
@@ -11,8 +11,11 @@ const { Title, Text } = Typography;
 const LoginPage = () => {
     const [form] = Form.useForm();
     const [isLoadingLogin, setIsLoadingLogin] = useState(false);
-    const navigate = useNavigate();
     const { setUser } = useContext(AuthContext);
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    const from = location.state?.from || "/";
 
     const onFinish = async (values) => {
         setIsLoadingLogin(true);
@@ -21,9 +24,9 @@ const LoginPage = () => {
             message.success("Đăng nhập thành công");
             localStorage.setItem("access_token", res.data.accessToken);
             setUser(res.data.user);
-            navigate("/");
+            navigate(from, { replace: true });
         } else {
-            console.log(res);
+            // console.log(res);
             notification.error({
                 message: "Error Login",
                 description: JSON.stringify(res.message)
@@ -86,6 +89,7 @@ const LoginPage = () => {
                             >
                                 <Input.Password
                                     placeholder="Enter your password"
+                                    autoComplete="off"
                                     onKeyDown={(event) => {
                                         if (event.key === 'Enter') form.submit();
                                     }}
