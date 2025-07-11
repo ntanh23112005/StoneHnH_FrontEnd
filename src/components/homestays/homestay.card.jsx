@@ -17,6 +17,8 @@ const { Title, Text } = Typography;
 
 const HomestayCard = ({ data }) => {
 
+    const VITE_IMG_BACKEND_URL = import.meta.env.VITE_IMG_BACKEND_URL;
+
     const [liked, setLiked] = useState(true);
 
     const listImg = (data.imageList).split(',');
@@ -44,7 +46,7 @@ const HomestayCard = ({ data }) => {
                     <div className="cover-container">
                         <img
                             alt={data.areaAddress}
-                            src={`/images/HomeStay/${data.homestayName}/${listImg[0]}`}
+                            src={`${VITE_IMG_BACKEND_URL}/HomeStay/${data.homestayName}/${listImg[0]}`}
                             className="cover-image"
                         />
                         <button

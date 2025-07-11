@@ -9,6 +9,9 @@ import { Avatar, Card, Space, Tag, Typography } from "antd";
 const { Title, Text } = Typography;
 
 const HostInfo = ({ customer }) => {
+
+    const VITE_IMG_BACKEND_URL = import.meta.env.VITE_IMG_BACKEND_URL;
+
     if (!customer) return null;
 
     const {
@@ -20,7 +23,7 @@ const HostInfo = ({ customer }) => {
         verifyStatus,
     } = customer;
 
-    const imageUrl = `/images/avatar/${customerPicture}`;
+    const imageUrl = `${VITE_IMG_BACKEND_URL}/avatar/${customerPicture}`;
 
     return (
         <Card

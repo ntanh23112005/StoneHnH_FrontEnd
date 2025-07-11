@@ -9,7 +9,6 @@ import {
 import App from './App.jsx';
 import { AuthWrapper } from './components/context/auth.context.jsx';
 import ErrorPage from './components/layouts/Error.jsx';
-import BookPage from './pages/book.jsx';
 import CustomerProfile from './pages/customer.profile.jsx';
 import HomePage from './pages/home.jsx';
 import HomestayPage from './pages/homestay.jsx';
@@ -81,14 +80,6 @@ const router = createBrowserRouter([
         )
       },
       {
-        path: "/books",
-        element: (
-          <PrivateRoute>
-            <BookPage />
-          </PrivateRoute>
-        )
-      },
-      {
         path: "/category",
         element: <HomestayPage />
       },
@@ -98,7 +89,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/profile",
-        element: <CustomerProfile />
+        element: (
+          <PrivateRoute>
+            <CustomerProfile />
+          </PrivateRoute>
+        )
       }
     ]
   },
@@ -117,6 +112,20 @@ const router = createBrowserRouter([
     element: (
       <ResetPasswordPage />
     )
+  },
+  {
+    path: "/admin",
+    element: (
+      <PrivateRoute allowedRoles={["ROLE_ADMIN"]}>
+        <AdminLayout />
+      </PrivateRoute>
+    ),
+    children: [
+      { index: true, path: "", element: <OverviewAdminPage /> },
+      { path: "users", element: <UserAdminPage /> },
+      { path: "bookings", element: <BookingAdminPage /> },
+      { path: "homestays", element: <HomestayAdminPage /> },
+    ],
   },
 ]);
 

@@ -1,7 +1,7 @@
 import axios from "../axios.customize";
 
-const fetchAllHomeStayAPI = (category, current) => {
-    const URL_BACKEND = `/api/v1/homestay?category=${category}&page=${current}&size=8`;
+const fetchAllHomeStayAPI = (category, current, areaAddress, maxCustomer) => {
+    const URL_BACKEND = `/api/v1/homestay?category=${category}&page=${current}&size=8&areaAddress=${areaAddress}&maxCustomer=${maxCustomer}`;
     return axios.get(URL_BACKEND);
 }
 

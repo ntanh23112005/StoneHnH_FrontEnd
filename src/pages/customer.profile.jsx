@@ -1,10 +1,60 @@
-import { useContext } from "react";
-import { Card, Form, Input, Button, Row, Col, Avatar, Tag } from "antd";
+import { useContext, useEffect, useState } from "react";
+import { Card, Row, Col, Spin, message } from "antd";
 import { AuthContext } from "../components/context/auth.context";
-import { CheckCircleOutlined, CloseCircleOutlined, HomeOutlined, MailOutlined, PhoneOutlined, UserOutlined } from "@ant-design/icons";
+import AvatarSection from "../components/user/profile/avatar.section";
+import InfoForm from "../components/user/profile/info.form";
+import { customerInfo } from "../types/user.type";
+import { updateUserAPI } from "../services/customer/user.api";
 
 const CustomerProfile = () => {
-    const { user, setUser } = useContext(AuthContext)
+
+    const { user } = useContext(AuthContext);
+    const [formValues, setFormValues] = useState(null);
+    const [isEditMode, setIsEditMode] = useState(false);
+
+    useEffect(() => {
+        if (user) {
+            setFormValues({
+                customerName: user.customerName,
+                email: user.email,
+                phoneNumber: user.phoneNumber,
+                customerAddress: user.customerAddress,
+                createdDate: new Date(user.createdDate).toLocaleDateString(),
+            });
+        }
+    }, [user]);
+
+    const onSubmit = async (values) => {
+
+        const creationUpdate = {
+            ...customerInfo,
+            customerId: user.customerId,
+            customerName: values.customerName,
+            email: user.email,
+            phoneNumber: values.phoneNumber,
+            password: user.password,
+            customerAddress: values.customerAddress,
+            createdDate: user.createdDate,
+            customerPicture: user.customerPicture,
+            verifyStatus: true,
+            accountStatus: true,
+        }
+        const res = await updateUserAPI(user.customerId, creationUpdate)
+        if (res.data) {
+            message.success("Thông tin đã được lưu");
+            setIsEditMode(false);
+        } else {
+            console.error(res);
+        }
+
+    };
+
+    if (!user || !formValues) return (
+        <Spin tip="Loading user...">
+            <div style={{ height: 100 }} />
+        </Spin>
+    );
+
     return (
         <div
             style={{
@@ -19,132 +69,20 @@ const CustomerProfile = () => {
                 title="PROFILE"
                 bordered={false}
                 style={{ width: 800, borderRadius: 8 }}
-                headStyle={{ color: "#4266b3", fontWeight: "bold", fontSize: 20 }}
+            // headStyle={{ color: "#4266b3", fontWeight: "bold", fontSize: 20 }}
             >
                 <Row gutter={24}>
-                    {/* Avatar */}
-                    <Col span={6} style={{ textAlign: "center" }}>
-                        <Avatar
-                            size={120}
-                            src={`/images/avatar/${user.customerPicture}`}
-                            icon={<UserOutlined />}
-                            style={{ border: "2px solid #4266b3" }}
-                        />
-                        <Button
-                            type="primary"
-                            style={{
-                                marginTop: 12,
-                                backgroundColor: "#4266b3",
-                                borderColor: "#4266b3",
-                            }}
-                        >
-                            Upload Picture
-                        </Button>
+                    <Col span={6}>
+                        <AvatarSection userInf={user} />
                     </Col>
-
-                    {/* Info */}
                     <Col span={18}>
-                        <Form
-                            layout="vertical"
-                            initialValues={{
-                                customerId: user.customerId,
-                                customerName: user.customerName,
-                                email: user.email,
-                                phoneNumber: user.phoneNumber,
-                                customerAddress: user.customerAddress,
-                                createdDate: user.createdDate,
-                            }}
-                        >
-                            <Row gutter={16}>
-                                <Col span={12}>
-                                    <Form.Item label="Customer ID">
-                                        <Input value={user.customerId} disabled />
-                                    </Form.Item>
-                                </Col>
-                                <Col span={12}>
-                                    <Form.Item label="Name">
-                                        <Input value={user.customerName} disabled />
-                                    </Form.Item>
-                                </Col>
-                            </Row>
-
-                            <Row gutter={16}>
-                                <Col span={12}>
-                                    <Form.Item label="Email">
-                                        <Input
-                                            prefix={<MailOutlined />}
-                                            value={user.email}
-                                            disabled
-                                        />
-                                    </Form.Item>
-                                </Col>
-                                <Col span={12}>
-                                    <Form.Item label="Phone Number">
-                                        <Input
-                                            prefix={<PhoneOutlined />}
-                                            value={user.phoneNumber}
-                                            disabled
-                                        />
-                                    </Form.Item>
-                                </Col>
-                            </Row>
-
-                            <Form.Item label="Address">
-                                <Input
-                                    prefix={<HomeOutlined />}
-                                    value={user.customerAddress}
-                                    disabled
-                                />
-                            </Form.Item>
-
-                            <Row gutter={16}>
-                                <Col span={12}>
-                                    <Form.Item label="Created Date">
-                                        <Input
-                                            value={new Date(user.createdDate).toLocaleDateString()}
-                                            disabled
-                                        />
-                                    </Form.Item>
-                                </Col>
-                                <Col span={12}>
-                                    <Form.Item label="Verified">
-                                        {user.verifyStatus ? (
-                                            <Tag icon={<CheckCircleOutlined />} color="success">
-                                                Verified
-                                            </Tag>
-                                        ) : (
-                                            <Tag icon={<CloseCircleOutlined />} color="error">
-                                                Not Verified
-                                            </Tag>
-                                        )}
-                                    </Form.Item>
-                                </Col>
-                            </Row>
-
-                            <Row gutter={16}>
-                                <Col span={12}>
-                                    <Form.Item label="Account Status">
-                                        {user.accountStatus ? (
-                                            <Tag color="blue">Active</Tag>
-                                        ) : (
-                                            <Tag color="red">Inactive</Tag>
-                                        )}
-                                    </Form.Item>
-                                </Col>
-                            </Row>
-
-                            <div style={{ textAlign: "right", marginTop: 16 }}>
-                                <Button
-                                    type="primary"
-                                    style={{
-                                        backgroundColor: "#4266b3",
-                                        borderColor: "#4266b3",
-                                    }}
-                                >
-                                    Update Information
-                                </Button>
-                            </div>
-                        </Form>
+                        <InfoForm
+                            user={user}
+                            initialValues={formValues}
+                            isEditMode={isEditMode}
+                            setIsEditMode={setIsEditMode}
+                            onSubmit={onSubmit}
+                        />
                     </Col>
                 </Row>
             </Card>

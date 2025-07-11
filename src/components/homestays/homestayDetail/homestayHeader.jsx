@@ -5,6 +5,9 @@ import { useState } from "react";
 const { Title, Text } = Typography;
 
 const HomestayHeader = ({ name, location, price, images = [] }) => {
+
+    const VITE_IMG_BACKEND_URL = import.meta.env.VITE_IMG_BACKEND_URL;
+
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     if (!Array.isArray(images) || images.length === 0) {
@@ -12,7 +15,7 @@ const HomestayHeader = ({ name, location, price, images = [] }) => {
     }
 
     const safeName = encodeURIComponent(name);
-    const getImagePath = (fileName) => `/images/HomeStay/${safeName}/${fileName}`;
+    const getImagePath = (fileName) => `${VITE_IMG_BACKEND_URL}/HomeStay/${safeName}/${fileName}`;
 
     const mainImage = images[0];
     const smallImages = images.slice(1, 5);

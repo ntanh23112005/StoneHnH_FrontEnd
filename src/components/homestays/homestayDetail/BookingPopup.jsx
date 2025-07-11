@@ -100,7 +100,7 @@ const BookingPopup = (props) => {
                     display: "flex",
                     justifyContent: "space-between",
                     gap: 24,
-                    flexWrap: "wrap",
+                    flexWrap: "wrap"
                 }}
             >
                 <div>
@@ -109,6 +109,7 @@ const BookingPopup = (props) => {
                         value={checkInTime}
                         onChange={setCheckInTime}
                         format="HH:mm"
+                        disabled
                     />
                 </div>
                 <div>
@@ -117,6 +118,7 @@ const BookingPopup = (props) => {
                         value={checkOutTime}
                         onChange={setCheckOutTime}
                         format="HH:mm"
+                        disabled
                     />
                 </div>
             </div>

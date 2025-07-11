@@ -1,6 +1,6 @@
-import { Breadcrumb, Button, Col, Divider, Row, Spin } from "antd";
+import { Breadcrumb, Button, Col, Divider, message, Row, Spin } from "antd";
 import { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import HomestayAmenities from "../components/homestays/homestayDetail/homestayDescription/homestayAmenities";
 import HomestayHeader from "../components/homestays/homestayDetail/homestayHeader";
 import HomestayLocationMap from "../components/homestays/homestayDetail/HomestayLocationMap";
@@ -14,7 +14,7 @@ import HostInfo from "../components/homestays/homestayDetail/hostInfo";
 import { getHomestayForDetailById } from "../services/homestay/homestay.api";
 import BookingPopup from "../components/homestays/homestayDetail/BookingPopup";
 import { FilterOutlined, HomeOutlined } from "@ant-design/icons";
-import { AuthContext } from "../components/context/auth.context"
+import { AuthContext } from "../components/context/auth.context";
 
 const HomestayDetailPage = () => {
     const { id } = useParams();
@@ -22,6 +22,8 @@ const HomestayDetailPage = () => {
     const [loading, setLoading] = useState(true);
     const [openBooking, setOpenBooking] = useState(false);
     const { user } = useContext(AuthContext);
+
+    const navigate = useNavigate()
 
     useEffect(() => {
         const fetchDetail = async () => {
@@ -75,6 +77,17 @@ const HomestayDetailPage = () => {
             .split(",")
             .filter((line) => keywords.some((k) => line.toLowerCase().includes(k)));
     };
+
+
+    const handleCheckLogged = () => {
+        if (!user) {
+            message.warning("Bạn cần đăng nhập để tiếp tục !");
+            navigate("/login", { state: { from: location.pathname } });
+            setOpenBooking(false);
+            return;
+        }
+        return setOpenBooking(true)
+    }
 
     return (
         <div style={{ padding: "24px 48px" }}>
@@ -224,7 +237,7 @@ const HomestayDetailPage = () => {
             <Button
                 type="primary"
                 size="large"
-                onClick={() => setOpenBooking(true)}
+                onClick={handleCheckLogged}
                 style={{
                     position: "fixed",
                     bottom: "100px",
@@ -247,7 +260,7 @@ const HomestayDetailPage = () => {
                 dailyPrice={homestay.dailyPrice}
                 maxCustomer={homestay.maxCustomer}
                 homestay={data.homestay}
-                customerId={user.customerId}
+                customerId={user?.customerId}
             />
 
         </div>
