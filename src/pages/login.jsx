@@ -1,10 +1,10 @@
 import { ArrowRightOutlined } from "@ant-design/icons";
-import { Button, Divider, Form, Input, message, notification, Row, Col, Typography, Space, Card } from "antd";
-import { Link, useNavigate } from "react-router-dom";
-import { LoginGoogleAPI, LoginUserAPI } from "../services/auth/api.auth.js";
-import { useState, useContext } from "react";
-import { AuthContext } from '../components/context/auth.context';
 import { GoogleLogin } from "@react-oauth/google";
+import { Button, Card, Col, Divider, Form, Input, message, notification, Row, Space, Typography } from "antd";
+import { useContext, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from '../components/context/auth.context';
+import { LoginGoogleAPI, LoginUserAPI } from "../services/auth/api.auth.js";
 
 const { Title, Text } = Typography;
 
@@ -132,6 +132,9 @@ const LoginPage = () => {
                             </Space>
 
                             <Divider />
+                            <div style={{ textAlign: "right", marginBottom: 16 }}>
+                                <Link to="/reset-password">Quên mật khẩu?</Link>
+                            </div>
                             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                                 <Link to={"/"}>
                                     <ArrowRightOutlined /> Back to homepage

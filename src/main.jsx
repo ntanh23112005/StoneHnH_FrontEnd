@@ -10,16 +10,16 @@ import App from './App.jsx';
 import { AuthWrapper } from './components/context/auth.context.jsx';
 import ErrorPage from './components/layouts/Error.jsx';
 import BookPage from './pages/book.jsx';
+import CustomerProfile from './pages/customer.profile.jsx';
 import HomePage from './pages/home.jsx';
 import HomestayPage from './pages/homestay.jsx';
 import HomestayDetailPage from './pages/homestayDetail.jsx';
 import LoginPage from './pages/login.jsx';
 import PrivateRoute from './pages/private.route.jsx';
 import RegisterPage from './pages/register.jsx';
-import ResetPasswordPage from "./pages/resetPasswordPage.jsx";
+import ResetPasswordPage from "./pages/resetpassword.jsx";
 import UserPage from './pages/user.jsx';
 import './styles/global.css';
-import CustomerProfile from './pages/customer.profile.jsx';
 
 // const router = createBrowserRouter([
 //   {
