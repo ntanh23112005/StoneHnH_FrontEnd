@@ -1,4 +1,4 @@
-import axios from '../axios.customize'
+import axios from '../axios.customize';
 
 const getAllStats = () => {
     const URL_BACKEND = "/api/v1/admin/stats";
@@ -46,7 +46,35 @@ const updateUser = (creationCustomer) => {
     })
 }
 
-export {
-    getAllStats, getMonthlyRevenue, getBookingRatio,
-    getAllUsers, createNewUser, updateUser
-}
+const getBookingById = (bookingId) => {
+    const URL_BACKEND = `/api/v1/bookings/${bookingId}`;
+    return axios.get(URL_BACKEND, {
+        withCredentials: true
+    });
+};
+
+const getAllBookings = () => {
+    return axios.get("/api/v1/bookings", {
+        withCredentials: true
+    });
+};
+
+const getAllHomestays = (limit = 10, offset = 0) => {
+    return axios.get("/api/v1/admin/homestays", {
+        params: {
+            limit,
+            offset
+        },
+        withCredentials: true
+    });
+};
+
+const updateHomestayStatus = (homestayId, status) => {
+    const URL_BACKEND = `/api/v1/admin/homestays/${homestayId}/status`;
+    return axios.put(URL_BACKEND, { status }, {
+        withCredentials: true
+    });
+};
+
+export { createNewUser, getAllBookings, getAllHomestays, getAllStats, getAllUsers, getBookingById, getBookingRatio, getMonthlyRevenue, updateHomestayStatus, updateUser };
+

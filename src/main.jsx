@@ -8,7 +8,13 @@ import {
 } from "react-router-dom";
 import App from './App.jsx';
 import { AuthWrapper } from './components/context/auth.context.jsx';
+import AdminLayout from './components/layouts/admin/AdminLayout.jsx';
 import ErrorPage from './components/layouts/Error.jsx';
+import BookingAdminPage from './pages/admin/booking.management.jsx';
+import HomestayDetailPageAD from './pages/admin/homestay.management.detail.jsx';
+import HomestayAdminPage from './pages/admin/homestay.management.jsx';
+import OverviewAdminPage from './pages/admin/overview.jsx';
+import UserAdminPage from './pages/admin/user.management.jsx';
 import CustomerProfile from './pages/customer.profile.jsx';
 import HomePage from './pages/home.jsx';
 import HomestayPage from './pages/homestay.jsx';
@@ -20,47 +26,6 @@ import ResetPasswordPage from "./pages/resetpassword.jsx";
 import UserPage from './pages/user.jsx';
 import './styles/global.css';
 
-// const router = createBrowserRouter([
-//   {
-//     path: "/",
-//     element: <App />,
-//     errorElement: <ErrorPage />,
-//     children: [
-//       {
-//         index: true,
-//         // element: <TodoApp />,
-//         element: <HomePage />
-//       },
-//       {
-//         path: "/users",
-//         element: <UserPage />
-//       },
-//       {
-//         path: "/books",
-//         element:
-//           <PrivateRoute>
-//             <BookPage />
-//           </PrivateRoute>
-//       },
-//       {
-//         path: "/category",
-//         element: <HomestayPage />
-//       },
-//       {
-//         path: "/detail/home-stay/:id",
-//         element: <HomestayDetailPage />
-//       }
-//     ]
-//   },
-//   {
-//     path: "/login",
-//     element: <LoginPage />
-//   },
-//   {
-//     path: "/register",
-//     element: <RegisterPage />
-//   },
-// ]);
 const router = createBrowserRouter([
   {
     path: "/",
@@ -125,6 +90,7 @@ const router = createBrowserRouter([
       { path: "users", element: <UserAdminPage /> },
       { path: "bookings", element: <BookingAdminPage /> },
       { path: "homestays", element: <HomestayAdminPage /> },
+      { path: "homestays/:id", element: <HomestayDetailPageAD /> },
     ],
   },
 ]);
