@@ -136,6 +136,7 @@ const LoginPage = () => {
                             </Space>
 
                             <Divider />
+                            <Link to={"/reset-password"}>Reset password</Link>
                             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                                 <Link to={"/"}>
                                     <ArrowRightOutlined /> Back to homepage

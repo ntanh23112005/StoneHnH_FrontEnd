@@ -54,7 +54,7 @@ const getBookingById = (bookingId) => {
 };
 
 const getAllBookings = () => {
-    return axios.get("/api/v1/bookings", {
+    return axios.get("/api/v1/admin/bookings", {
         withCredentials: true
     });
 };

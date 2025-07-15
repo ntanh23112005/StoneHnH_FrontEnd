@@ -1,7 +1,7 @@
+import { useEffect, useState } from 'react';
 import UserForm from "../components/user/user.form";
 import UserTable from "../components/user/user.table";
 import { fetchAllUserAPI } from '../services/api.service';
-import { useEffect, useState } from 'react';
 
 const UserPage = () => {
 
@@ -18,6 +18,7 @@ const UserPage = () => {
     const loadUser = async () => {
         const res = await fetchAllUserAPI(current, pageSize);
         if (res.data) {
+            console.log("API trả về:", res.data);
             setDataUsers(res.data.result)
             setCurrent(res.data.meta.current)
             setPageSize(res.data.meta.pageSize)

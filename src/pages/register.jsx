@@ -16,8 +16,8 @@ const RegisterPage = () => {
     const [otp, setOtp] = useState("");
     const [verifying, setVerifying] = useState(false);
     const [countdown, setCountdown] = useState(0);
+    const [submitting, setSubmitting] = useState(false);
 
-    // Khi load trang, kiểm tra localStorage
     useEffect(() => {
         const storedTimestamp = localStorage.getItem("register_send_time");
         if (storedTimestamp) {
@@ -28,7 +28,6 @@ const RegisterPage = () => {
         }
     }, []);
 
-    // Giảm countdown mỗi giây
     useEffect(() => {
         if (countdown <= 0) return;
 
@@ -61,7 +60,6 @@ const RegisterPage = () => {
                 description: "Vui lòng kiểm tra email."
             });
             setOtpModalVisible(true);
-            // Lưu timestamp
             localStorage.setItem("register_send_time", Date.now().toString());
             setCountdown(60);
         } catch (err) {
@@ -108,39 +106,41 @@ const RegisterPage = () => {
     const onFinish = async (values) => {
         if (!isEmailVerified) {
             notification.warning({
-                message: "Bạn cần xác thực email trước khi đăng ký."
+                message: "Bạn cần xác thực email trước khi đăng ký.",
             });
             return;
         }
-
         try {
+            setSubmitting(true);
             const response = await createCustomerAPI({
                 creationCustomer: {
                     customerName: values.fullName,
                     email: values.email,
                     password: values.password,
-                    phoneNumber: values.phone
+                    phoneNumber: values.phone,
                 },
-                roleIds: ["R01"]
+                roleIds: ["R01"],
             });
 
-            if (!response?.data?.success) {
+            console.log("Response API đăng ký:", response);
+
+            if (response?.success === true) {
+                notification.success({ message: "Đăng ký thành công" });
+                navigate("/login");
+            } else {
                 notification.error({
                     message: "Đăng ký thất bại",
-                    description: response?.data?.message || "Email hoặc SDT đã tồn tại ở 1 tài khoản khác!"
+                    description:
+                        response?.data?.message || "Email hoặc SDT đã tồn tại ở 1 tài khoản khác!",
                 });
-                return;
             }
-
-            notification.success({
-                message: "Đăng ký thành công"
-            });
-            navigate("/login");
         } catch (err) {
             notification.error({
                 message: "Đăng ký thất bại",
-                description: err.response?.data?.message || err.message
+                description: err.response?.data?.message || err.message,
             });
+        } finally {
+            setSubmitting(false);
         }
     };
 
@@ -184,8 +184,8 @@ const RegisterPage = () => {
                                 {isEmailVerified
                                     ? "Đã xác thực"
                                     : countdown > 0
-                                    ? `Gửi lại sau ${countdown}s`
-                                    : "Gửi mã"}
+                                        ? `Gửi lại sau ${countdown}s`
+                                        : "Gửi mã"}
                             </Button>
                         </Input.Group>
                     </Form.Item>
@@ -220,6 +220,7 @@ const RegisterPage = () => {
                             type="primary"
                             htmlType="submit"
                             block
+                            disabled={submitting}
                             className="button-primary"
                         >
                             Đăng ký

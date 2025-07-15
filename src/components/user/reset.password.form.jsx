@@ -1,5 +1,6 @@
 import { Button, Form, Input, message, Modal, Typography } from "antd";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { resetPasswordAPI, sendVerificationCodeAPI, verifyEmailCodeAPI } from "../../services/customer/user.api";
 
 const { Title } = Typography;
@@ -12,7 +13,7 @@ const ResetPasswordForm = () => {
     const [otpModalVisible, setOtpModalVisible] = useState(false);
     const [otp, setOtp] = useState("");
     const [isEmailVerified, setIsEmailVerified] = useState(false);
-
+    const navigate = useNavigate();
     const [countdown, setCountdown] = useState(0);
 
     // Khi load trang, kiểm tra localStorage
@@ -113,13 +114,14 @@ const ResetPasswordForm = () => {
         setLoading(true);
         try {
             const res = await resetPasswordAPI(email, newPassword);
-            if (res.data.success) {
+            if (res?.data?.success === true) {
                 message.success("Đặt lại mật khẩu thành công.");
                 form.resetFields();
                 setIsEmailVerified(false);
                 localStorage.removeItem("reset_password_send_time");
+                navigate("/login");
             } else {
-                message.error(res.data.message || "Đặt lại mật khẩu thất bại.");
+                message.error(res?.data?.message || "Đặt lại mật khẩu thất bại.");
             }
         } catch (error) {
             console.error(error);
