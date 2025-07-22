@@ -1,0 +1,11 @@
+.admin-dashboard .homestay-breakdown,
+.admin-dashboard .order-breakdown {
+  margin-top: 8px;
+  font-size: 14px;
+  color: #555;
+}
+
+.admin-dashboard .order-breakdown div,
+.admin-dashboard .homestay-breakdown div {
+  margin-top: 4px;
+}

@@ -1,19 +1,20 @@
-import { useContext, useEffect, useState } from 'react';
-import { Input, Button, Switch, Dropdown, Avatar, message } from 'antd';
 import {
-    SearchOutlined,
-    FilterOutlined,
-    MenuOutlined,
-    UserOutlined,
     CheckOutlined,
-    CloseOutlined
+    CloseOutlined,
+    MenuOutlined,
+    SearchOutlined,
+    UserOutlined
 } from '@ant-design/icons';
+import { Avatar, Button, Dropdown, Input, message, Switch } from 'antd';
+import { useContext, useEffect, useState } from 'react';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import './header.css';
 
-import { AuthContext } from '../context/auth.context';
-import { getAccountAPI, logoutAPI } from '../../services/auth/api.auth';
 import { Icons } from '../../constants/icons';
+import { getAccountAPI, logoutAPI } from '../../services/auth/api.auth';
+import { registerOwnerRole } from '../../services/owner/owner.api';
+import { AuthContext } from '../context/auth.context';
+
 
 const categories = [
     { url: '/category?category=homestay', label: 'Home Stay', icon: Icons.homeStay },
@@ -131,6 +132,42 @@ const HeaderTop = () => {
         navigate(`/category?${newParams.toString()}`);
     }
 
+    const handleBecomeHost = async () => {
+        if (!isLoggedIn) {
+            message.warning("Vui lòng đăng nhập trước.");
+            return;
+        }
+
+        // Kiểm tra hiện tại
+        const hasOwnerRole = user.roleName?.includes("ROLE_OWNER");
+
+        if (!hasOwnerRole) {
+            try {
+                await registerOwnerRole(user.customerId);
+                message.success("Bạn đã đăng ký làm chủ nhà!");
+
+                // Refetch thông tin người dùng sau khi đăng ký
+                const res = await getAccountAPI();
+                if (res) {
+                    setUser(res.data);
+
+                    // Kiểm tra lại vai trò
+                    const updatedHasOwnerRole = res.data.roleName?.includes("ROLE_OWNER");
+                    if (!updatedHasOwnerRole) {
+                        message.warning("Hệ thống chưa cập nhật vai trò, vui lòng thử lại.");
+                        return;
+                    }
+                }
+            } catch (err) {
+                console.error(err);
+                message.error("Đăng ký chủ nhà thất bại!");
+                return;
+            }
+        }
+
+        // Cuối cùng, navigate
+        navigate(`/owner/${user.customerId}`);
+    };
 
     return (
         <div className="stonehnh-header">
@@ -178,7 +215,9 @@ const HeaderTop = () => {
 
                 {/* Admin & Host & User */}
                 <div className="user-section">
-                    <Link to="/owner" className="host-link">Đón tiếp khách</Link>
+                    <span onClick={handleBecomeHost} className="host-link" style={{ cursor: "pointer" }}>
+                        Đón tiếp khách
+                    </span>
                     <Dropdown
                         key={user ? user.email : 'guest'}
                         menu={{ items: getUserMenuItems() }}

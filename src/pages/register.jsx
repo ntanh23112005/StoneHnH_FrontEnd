@@ -1,7 +1,7 @@
 import { Button, Divider, Form, Input, Modal, notification } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import "../components/user/RegisterPage.css";
+import "../components/user/register.css";
 import {
     createCustomerAPI,
     sendVerificationCodeAPI,
@@ -15,6 +15,34 @@ const RegisterPage = () => {
     const [otpModalVisible, setOtpModalVisible] = useState(false);
     const [otp, setOtp] = useState("");
     const [verifying, setVerifying] = useState(false);
+    const [countdown, setCountdown] = useState(0);
+    const [submitting, setSubmitting] = useState(false);
+
+    useEffect(() => {
+        const storedTimestamp = localStorage.getItem("register_send_time");
+        if (storedTimestamp) {
+            const elapsed = Math.floor((Date.now() - parseInt(storedTimestamp, 10)) / 1000);
+            if (elapsed < 60) {
+                setCountdown(60 - elapsed);
+            }
+        }
+    }, []);
+
+    useEffect(() => {
+        if (countdown <= 0) return;
+
+        const timer = setInterval(() => {
+            setCountdown(prev => {
+                if (prev <= 1) {
+                    clearInterval(timer);
+                    return 0;
+                }
+                return prev - 1;
+            });
+        }, 1000);
+
+        return () => clearInterval(timer);
+    }, [countdown]);
 
     const handleSendVerificationCode = async () => {
         const email = form.getFieldValue("email");
@@ -24,6 +52,7 @@ const RegisterPage = () => {
             });
             return;
         }
+
         try {
             await sendVerificationCodeAPI(email);
             notification.success({
@@ -31,6 +60,8 @@ const RegisterPage = () => {
                 description: "Vui lòng kiểm tra email."
             });
             setOtpModalVisible(true);
+            localStorage.setItem("register_send_time", Date.now().toString());
+            setCountdown(60);
         } catch (err) {
             notification.error({
                 message: "Gửi mã thất bại",
@@ -73,33 +104,43 @@ const RegisterPage = () => {
     };
 
     const onFinish = async (values) => {
-        console.log("Form Values:", values);
         if (!isEmailVerified) {
             notification.warning({
-                message: "Bạn cần xác thực email trước khi đăng ký."
+                message: "Bạn cần xác thực email trước khi đăng ký.",
             });
             return;
         }
-
         try {
-            await createCustomerAPI({
+            setSubmitting(true);
+            const response = await createCustomerAPI({
                 creationCustomer: {
                     customerName: values.fullName,
                     email: values.email,
                     password: values.password,
-                    phoneNumber: values.phone
+                    phoneNumber: values.phone,
                 },
-                roleIds: ['R01']
+                roleIds: ["R01"],
             });
-            notification.success({
-                message: "Đăng ký thành công"
-            });
-            navigate("/login");
+
+            console.log("Response API đăng ký:", response);
+
+            if (response?.success === true) {
+                notification.success({ message: "Đăng ký thành công" });
+                navigate("/login");
+            } else {
+                notification.error({
+                    message: "Đăng ký thất bại",
+                    description:
+                        response?.data?.message || "Email hoặc SDT đã tồn tại ở 1 tài khoản khác!",
+                });
+            }
         } catch (err) {
             notification.error({
                 message: "Đăng ký thất bại",
-                description: err.response?.data?.message || err.message
+                description: err.response?.data?.message || err.message,
             });
+        } finally {
+            setSubmitting(false);
         }
     };
 
@@ -107,7 +148,7 @@ const RegisterPage = () => {
         <div className="gradient-bg">
             <div className="form-container">
                 <Form form={form} layout="vertical" onFinish={onFinish}>
-                    <h2 className="form-title">Đăng ký khách hàng</h2>
+                    <h2 className="form-title">Register</h2>
 
                     <Form.Item
                         label="Họ tên"
@@ -117,10 +158,7 @@ const RegisterPage = () => {
                         <Input className="custom-input" placeholder="Nhập họ tên" />
                     </Form.Item>
 
-                    <Form.Item
-                        label="Email"
-                        required
-                    >
+                    <Form.Item label="Email" required>
                         <Input.Group compact>
                             <Form.Item
                                 name="email"
@@ -131,7 +169,7 @@ const RegisterPage = () => {
                                 ]}
                             >
                                 <Input
-                                    style={{ width: "calc(100% - 88px)" }}
+                                    style={{ width: "calc(100% - 140px)" }}
                                     placeholder="example@email.com"
                                     disabled={isEmailVerified}
                                 />
@@ -140,10 +178,14 @@ const RegisterPage = () => {
                                 type="primary"
                                 className="button-primary"
                                 onClick={handleSendVerificationCode}
-                                disabled={isEmailVerified}
+                                disabled={isEmailVerified || countdown > 0}
                                 icon={<i className="fas fa-paper-plane"></i>}
                             >
-                                {isEmailVerified ? "Đã xác thực" : "Gửi mã"}
+                                {isEmailVerified
+                                    ? "Đã xác thực"
+                                    : countdown > 0
+                                        ? `Gửi lại sau ${countdown}s`
+                                        : "Gửi mã"}
                             </Button>
                         </Input.Group>
                     </Form.Item>
@@ -159,10 +201,7 @@ const RegisterPage = () => {
                         name="password"
                         rules={[{ required: true, message: "Vui lòng nhập mật khẩu!" }]}
                     >
-                        <Input.Password
-                            className="custom-input"
-                            placeholder="Nhập mật khẩu"
-                        />
+                        <Input.Password className="custom-input" placeholder="Nhập mật khẩu" />
                     </Form.Item>
 
                     <Form.Item
@@ -173,10 +212,7 @@ const RegisterPage = () => {
                             { pattern: /^\d+$/, message: "Số điện thoại phải là số!" }
                         ]}
                     >
-                        <Input
-                            className="custom-input"
-                            placeholder="Nhập số điện thoại"
-                        />
+                        <Input className="custom-input" placeholder="Nhập số điện thoại" />
                     </Form.Item>
 
                     <Form.Item>
@@ -184,6 +220,7 @@ const RegisterPage = () => {
                             type="primary"
                             htmlType="submit"
                             block
+                            disabled={submitting}
                             className="button-primary"
                         >
                             Đăng ký
@@ -200,7 +237,6 @@ const RegisterPage = () => {
                 </Form>
             </div>
 
-            {/* Modal nhập OTP */}
             <Modal
                 title="Nhập mã xác thực"
                 open={otpModalVisible}
