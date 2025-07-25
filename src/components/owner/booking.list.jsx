@@ -21,37 +21,38 @@ const OwnerBookingList = () => {
     const [modalVisible, setModalVisible] = useState(false);
     const [searchText, setSearchText] = useState("");
     const [paymentStatusFilter, setPaymentStatusFilter] = useState(null);
+    const [reloadTrigger, setReloadTrigger] = useState(0);
 
     const { user } = useContext(AuthContext);
 
     useEffect(() => {
-        const fetchBookings = async () => {
-            try {
-                const bookingsData = await getAllBookings(user.customerId);
-                const detailsData = await getAllBookingDetails(user.customerId);
-
-                const merged = bookingsData.map((booking) => {
-                    const relatedDetails = detailsData.filter(
-                        (d) => d.bookingId === booking.bookingId
-                    );
-                    const firstBookingTime = relatedDetails[0]?.bookingTime || null;
-
-                    return {
-                        ...booking,
-                        bookingTime: firstBookingTime,
-                    };
-                }).sort((a, b) => new Date(b.bookingTime) - new Date(a.bookingTime));
-
-                setBookings(merged);
-            } catch (err) {
-                console.error("Lỗi khi load bookings:", err);
-            } finally {
-                setLoading(false);
-            }
-        };
-
         if (user?.customerId) {
-            fetchBookings();
+            const fetchData = async () => {
+                try {
+                    const bookingsData = await getAllBookings(user.customerId);
+                    const detailsData = await getAllBookingDetails(user.customerId);
+
+                    const merged = bookingsData.map((booking) => {
+                        const relatedDetails = detailsData.filter(
+                            (d) => d.bookingId === booking.bookingId
+                        );
+                        const firstBookingTime = relatedDetails[0]?.bookingTime || null;
+
+                        return {
+                            ...booking,
+                            bookingTime: firstBookingTime,
+                        };
+                    }).sort((a, b) => new Date(b.bookingTime) - new Date(a.bookingTime));
+
+                    setBookings(merged);
+                } catch (err) {
+                    console.error("Lỗi khi load bookings:", err);
+                } finally {
+                    setLoading(false);
+                }
+            };
+
+            fetchData();
         }
     }, [user]);
 
@@ -71,6 +72,8 @@ const OwnerBookingList = () => {
                 return <Tag color="green">Đã thanh toán</Tag>;
             case 2:
                 return <Tag color="red">Đã hủy</Tag>;
+            case 3:
+                return <Tag color="red">Chờ bạn duyệt</Tag>;
             default:
                 return <Tag>Không rõ</Tag>;
         }
@@ -198,7 +201,7 @@ const OwnerBookingList = () => {
                     <Button type="link" onClick={() => showBookingDetails(record.bookingId)}>
                         Xem
                     </Button>
-                    {record.paymentStatus === 0 && (
+                    {record.paymentStatus === 3 && (
                         <Button
                             type="primary"
                             onClick={() =>
@@ -275,6 +278,7 @@ const OwnerBookingList = () => {
                     <Option value={0}>Chưa thanh toán</Option>
                     <Option value={1}>Đã thanh toán</Option>
                     <Option value={2}>Đã hủy</Option>
+                    <Option value={3}>Chờ duyệt</Option>
                 </Select>
             </Space>
 
