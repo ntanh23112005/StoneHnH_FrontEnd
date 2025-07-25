@@ -74,7 +74,6 @@ const PaymentForm = () => {
         const payload = {
             bookingId: selectedBooking.bookingId,
             paymentName: paymentMethod,
-            createTime: new Date().toISOString(),
             status: 1,
         };
 
