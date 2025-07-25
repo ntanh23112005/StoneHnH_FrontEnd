@@ -29,11 +29,15 @@ const HomestayCard = ({ data }) => {
 
     const VITE_IMG_BACKEND_URL = import.meta.env.VITE_IMG_BACKEND_URL;
 
-    const listImg = Array.isArray(data.images)
-        ? data.images.flatMap(i =>
-            i.homestayImage.split(",").map(s => s.trim())
-        )
-        : [];
+    // const listImg = Array.isArray(data.images)
+    //     ? data.images.flatMap(i =>
+    //         i.homestayImage.split(",").map(s => s.trim())
+    //     )
+    //     : [];
+
+    const listImg = typeof data.imageList === 'string'
+    ? data.imageList.split(',').map(s => s.trim())
+    : [];
 
     const { showBeforeTax } = useContext(AuthContext);
 
