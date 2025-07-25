@@ -7,14 +7,13 @@ import {
 } from '@ant-design/icons';
 import { Card, Tag, Typography } from 'antd';
 import { useContext } from 'react';
-import { AuthContext } from '../../context/auth.context';
+import { AuthContext } from '../../components/context/auth.context';
 import './HomestayCard.css';
 
 const { Title, Text } = Typography;
 
-const HomestayCard = ({ data }) => {
+const HomestayCard = ({ data, onClick }) => {
     const { showBeforeTax } = useContext(AuthContext);
-
     const VITE_IMG_BACKEND_URL = import.meta.env.VITE_IMG_BACKEND_URL;
 
     const listImg = Array.isArray(data.images)
@@ -41,6 +40,7 @@ const HomestayCard = ({ data }) => {
         <Card
             hoverable
             className="homestay-card"
+            onClick={onClick}
             cover={
                 <div className="cover-container">
                     <img

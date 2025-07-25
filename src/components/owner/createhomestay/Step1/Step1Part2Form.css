@@ -1,0 +1,47 @@
+.custom-step2-form {
+    background-color: #fff;
+    padding: 24px;
+    border-radius: 16px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+.custom-step2-form .ant-form-item-label>label {
+    font-weight: 600;
+    color: #333;
+}
+
+.custom-step2-form .ant-select-selector,
+.custom-step2-form .ant-input-number {
+    border-radius: 8px !important;
+    height: 40px !important;
+    display: flex;
+    align-items: center;
+}
+
+.custom-step2-form .ant-form-item {
+    margin-bottom: 20px;
+}
+
+.custom-step2-form {
+    background-color: #fff;
+    padding: 24px;
+    border-radius: 16px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+.custom-step2-form .ant-form-item-label>label {
+    font-weight: 600;
+    color: #333;
+}
+
+.custom-step2-form .ant-select-selector,
+.custom-step2-form .ant-input-number {
+    border-radius: 8px !important;
+    height: 40px !important;
+    display: flex;
+    align-items: center;
+}
+
+.custom-step2-form .ant-form-item {
+    margin-bottom: 20px;
+}

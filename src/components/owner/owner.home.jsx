@@ -4,23 +4,22 @@ import {
     LogoutOutlined,
     MenuFoldOutlined,
     MenuUnfoldOutlined,
-    PayCircleOutlined,
-    UserOutlined,
+    PayCircleOutlined
 } from '@ant-design/icons';
 import { Button, Layout, Menu, message, theme } from 'antd';
 import { useContext, useState } from 'react';
-import { Link, Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { logoutAPI } from '../../services/auth/api.auth';
 import { AuthContext } from '../context/auth.context';
 
 const { Header, Sider, Content } = Layout;
 
 const AdminLayout = () => {
-    const { id } = useParams();
     const [collapsed, setCollapsed] = useState(false);
     const location = useLocation();
     const navigate = useNavigate();
     const { setUser } = useContext(AuthContext);
+    const { user } = useContext(AuthContext);
 
     const {
         token: { colorBgContainer, borderRadiusLG },
@@ -69,24 +68,19 @@ const AdminLayout = () => {
                     selectedKeys={[location.pathname]}
                     items={[
                         {
-                            key: `/owner/${id}`,
+                            key: `/owner`,
                             icon: <FundViewOutlined />,
-                            label: <Link to={`/owner/${id}`} style={{ textDecoration: 'none' }}>Tổng quan</Link>,
+                            label: <Link to={`/owner`} style={{ textDecoration: 'none' }}>Tổng quan</Link>,
                         },
                         {
-                            key: '/admin/users',
-                            icon: <UserOutlined />,
-                            label: <Link to="/admin/users" style={{ textDecoration: 'none' }}>Người dùng</Link>,
-                        },
-                        {
-                            key: '/admin/bookings',
-                            icon: <PayCircleOutlined />,
-                            label: <Link to="/admin/bookings" style={{ textDecoration: 'none' }}>Booking</Link>,
-                        },
-                        {
-                            key: '/admin/homestays',
+                            key: '/owner/homestay',
                             icon: <HomeOutlined />,
-                            label: <Link to="/admin/homestays" style={{ textDecoration: 'none' }}>Homestay</Link>,
+                            label: <Link to={`/owner/homestay`} style={{ textDecoration: 'none' }}>Homestay của tôi</Link>,
+                        },
+                        {
+                            key: '/owner/bookings',
+                            icon: <PayCircleOutlined />,
+                            label: <Link to="/owner/bookings" style={{ textDecoration: 'none' }}>Booking</Link>,
                         },
                     ]}
                 />
