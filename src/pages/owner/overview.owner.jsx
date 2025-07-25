@@ -1,34 +1,73 @@
-import { CalendarOutlined, DollarOutlined, HomeOutlined } from '@ant-design/icons';
-import { Card, Col, Row, Statistic } from 'antd';
-import { useEffect, useState } from 'react';
-import { useParams } from "react-router-dom";
-import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
-import { getOwnerMonthlyRevenue, getOwnerStatistics } from '../../services/owner/owner.api';
+import {
+    CalendarOutlined,
+    DollarOutlined,
+    HomeOutlined
+} from "@ant-design/icons";
+import {
+    Card,
+    Col,
+    Row,
+    Select,
+    Statistic
+} from "antd";
+import {
+    useContext,
+    useEffect,
+    useState
+} from "react";
+import {
+    Bar,
+    BarChart,
+    ResponsiveContainer,
+    Tooltip,
+    XAxis,
+    YAxis
+} from "recharts";
+import { AuthContext } from "../../components/context/auth.context";
+import {
+    getAllBookings,
+    getOwnerMonthlyRevenue,
+    getOwnerStatistics
+} from "../../services/owner/owner.api";
 import "../owner/Owner.css";
 
+const { Option } = Select;
+
 const OverviewOwnerPage = () => {
-    const { id } = useParams();
     const [stats, setStats] = useState();
     const [monthlyRevenue, setMonthlyRevenue] = useState([]);
+    const { user } = useContext(AuthContext);
+    const currentYear = new Date().getFullYear();
+    const [selectedYear, setSelectedYear] = useState(currentYear);
 
     useEffect(() => {
-        if (id) {
+        if (user?.customerId) {
             fetchOwnerStatistics();
-            fetchOwnerRevenue();
+            fetchOwnerRevenue(selectedYear);
         }
-    }, [id]);
+    }, [user?.customerId, selectedYear]);
 
     const fetchOwnerStatistics = async () => {
-        const res = await getOwnerStatistics(id);
-        setStats(res)
-        console.log(res)
+        const statsRes = await getOwnerStatistics(user.customerId);
+        const bookings = await getAllBookings(user.customerId);
+        const status0 = bookings.filter(b => b.paymentStatus === 0).length;
+        const status1 = bookings.filter(b => b.paymentStatus === 1).length;
+        const status2 = bookings.filter(b => b.paymentStatus === 2).length;
+
+        setStats({
+            ...statsRes,
+            bookingStatus0: status0,
+            bookingStatus1: status1,
+            bookingStatus2: status2
+        });
     };
 
-    const fetchOwnerRevenue = async () => {
-        const res = await getOwnerMonthlyRevenue(id);
+    const fetchOwnerRevenue = async (year) => {
+        const res = await getOwnerMonthlyRevenue(user.customerId, year);
+        console.log(res)
         const monthLabels = [
-            'Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6',
-            'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'
+            "Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6",
+            "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"
         ];
         const formatted = res.map(item => ({
             ...item,
@@ -39,9 +78,7 @@ const OverviewOwnerPage = () => {
 
     return (
         <div className="admin-dashboard">
-            {/* ROW 1 - Statistics */}
             <Row gutter={[16, 16]}>
-                {/* Tổng doanh thu */}
                 <Col xs={24} sm={12} md={6}>
                     <Card>
                         <Statistic
@@ -50,30 +87,31 @@ const OverviewOwnerPage = () => {
                             prefix={<DollarOutlined />}
                             valueStyle={{ color: "#3f8600" }}
                             suffix="VNĐ"
-                            formatter={(value) => value.toLocaleString("vi-VN")}
+                            formatter={(value) =>
+                                value.toLocaleString("vi-VN")
+                            }
                         />
                     </Card>
                 </Col>
 
-                {/* Tổng số Homestay */}
                 <Col xs={24} sm={12} md={6}>
-                    <Card>
+                    <Card style={{ borderLeft: "4px solid #1890ff" }}>
                         <Statistic
                             title="Tổng số Homestay"
                             value={(stats?.activeHomestays || 0) + (stats?.inactiveHomestays || 0)}
                             prefix={<HomeOutlined />}
+                            valueStyle={{ fontWeight: "bold", fontSize: 36, color: "#1890ff" }}
                             formatter={(value) => value.toLocaleString("vi-VN")}
                         />
-                        <div className="homestay-breakdown">
+                        <div className="homestay-breakdown highlighted-breakdown">
                             <div>Đã duyệt: {stats?.activeHomestays || 0}</div>
                             <div>Chưa duyệt: {stats?.inactiveHomestays || 0}</div>
                         </div>
                     </Card>
                 </Col>
 
-                {/* Tổng số đơn hàng */}
                 <Col xs={24} sm={12} md={6}>
-                    <Card>
+                    <Card style={{ borderLeft: "4px solid #faad14" }}>
                         <Statistic
                             title="Tổng số đơn hàng"
                             value={
@@ -82,9 +120,10 @@ const OverviewOwnerPage = () => {
                                 (stats?.bookingStatus2 || 0)
                             }
                             prefix={<CalendarOutlined />}
+                            valueStyle={{ fontWeight: "bold", fontSize: 36, color: "#faad14" }}
                             formatter={(value) => value.toLocaleString("vi-VN")}
                         />
-                        <div className="order-breakdown">
+                        <div className="order-breakdown highlighted-breakdown">
                             <div>Chưa thanh toán: {stats?.bookingStatus0 || 0}</div>
                             <div>Đã thanh toán: {stats?.bookingStatus1 || 0}</div>
                             <div>Đã hủy: {stats?.bookingStatus2 || 0}</div>
@@ -93,16 +132,43 @@ const OverviewOwnerPage = () => {
                 </Col>
             </Row>
 
-            {/* ROW 2 - Monthly Revenue Chart */}
             <Row gutter={[16, 16]} style={{ marginTop: 24 }}>
                 <Col xs={24}>
-                    <Card title="Tổng doanh thu theo tháng">
+                    <Card
+                        title={
+                            <div
+                                style={{
+                                    display: "flex",
+                                    justifyContent: "space-between",
+                                    alignItems: "center"
+                                }}
+                            >
+                                <span>Tổng doanh thu theo tháng</span>
+                                <Select
+                                    value={selectedYear}
+                                    onChange={(value) => setSelectedYear(value)}
+                                    style={{ width: 120 }}
+                                >
+                                    {Array.from({ length: 5 }).map((_, index) => {
+                                        const year = currentYear - index;
+                                        return (
+                                            <Option key={year} value={year}>
+                                                Năm {year}
+                                            </Option>
+                                        );
+                                    })}
+                                </Select>
+                            </div>
+                        }
+                    >
                         <ResponsiveContainer width="100%" height={300}>
                             <BarChart data={monthlyRevenue}>
                                 <XAxis dataKey="month" />
                                 <YAxis />
                                 <Tooltip
-                                    formatter={(value) => `${value.toLocaleString("vi-VN")} VNĐ`}
+                                    formatter={(value) =>
+                                        `${value.toLocaleString("vi-VN")} VNĐ`
+                                    }
                                 />
                                 <Bar dataKey="revenue" fill="#4b71b8" />
                             </BarChart>

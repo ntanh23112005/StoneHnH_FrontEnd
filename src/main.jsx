@@ -21,6 +21,8 @@ import HomePage from './pages/home.jsx';
 import HomestayPage from './pages/homestay.jsx';
 import HomestayDetailPage from './pages/homestayDetail.jsx';
 import LoginPage from './pages/login.jsx';
+import BookingOwnerPage from './pages/owner/booking.jsx';
+import HomestayOwnerList from './pages/owner/homestay.list.jsx';
 import OverviewOwner from './pages/owner/overview.owner.jsx';
 import PrivateRoute from './pages/private.route.jsx';
 import RegisterPage from './pages/register.jsx';
@@ -96,7 +98,7 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "/owner/:id",
+    path: "/owner",
     element: (
       <PrivateRoute allowedRoles={["ROLE_OWNER"]}>
         <OwnerHome />
@@ -104,10 +106,8 @@ const router = createBrowserRouter([
     ),
     children: [
       { index: true, path: "", element: <OverviewOwner /> },
-      { path: "users", element: '' },
-      { path: "bookings", element: '' },
-      { path: "homestays", element: '' },
-      { path: "homestays/:id", element: '' },
+      { path: "homestay", element: <HomestayOwnerList /> },
+      { path: "bookings", element: <BookingOwnerPage/> },
     ],
   },
 ]);

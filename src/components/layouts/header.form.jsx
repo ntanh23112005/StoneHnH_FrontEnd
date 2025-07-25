@@ -166,7 +166,7 @@ const HeaderTop = () => {
         }
 
         // Cuối cùng, navigate
-        navigate(`/owner/${user.customerId}`);
+        navigate(`/owner`);
     };
 
     return (

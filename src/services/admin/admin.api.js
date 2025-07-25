@@ -59,13 +59,11 @@ const getAllBookings = () => {
     });
 };
 
-const getAllHomestays = (limit = 10, offset = 0) => {
+// services/admin/admin.api.js
+const getAllHomestays = ({ name = "", status = "all", page = 1, size = 12 }) => {
     return axios.get("/api/v1/admin/homestays", {
-        params: {
-            limit,
-            offset
-        },
-        withCredentials: true
+        params: { name, status, page, size },
+        withCredentials: true,
     });
 };
 

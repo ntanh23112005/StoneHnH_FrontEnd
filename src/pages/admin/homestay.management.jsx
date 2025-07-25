@@ -11,18 +11,26 @@ const HomestayList = () => {
     const [homestays, setHomestays] = useState([]);
     const [loading, setLoading] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
+    const [pageSize, setPageSize] = useState(12); // theo dữ liệu backend
     const [searchKeyword, setSearchKeyword] = useState("");
     const [statusFilter, setStatusFilter] = useState("all");
-
-    const pageSize = 6;
+    const [totalItems, setTotalItems] = useState(0); // dùng cho pagination backend
 
     useEffect(() => {
         const fetchHomestays = async () => {
             setLoading(true);
             try {
-                const res = await getAllHomestays();
-                console.log(res.data);
-                setHomestays(res.data);
+                const res = await getAllHomestays({
+                    name: searchKeyword,
+                    status: statusFilter,
+                    page: currentPage,
+                    size: pageSize
+                });
+
+                const { data, totalItems } = res.data;
+
+                setHomestays(data || []);
+                setTotalItems(totalItems || 0);
             } catch (err) {
                 console.error(err);
                 message.error("Không thể tải danh sách homestay!");
@@ -32,29 +40,8 @@ const HomestayList = () => {
         };
 
         fetchHomestays();
-    }, []);
+    }, [currentPage, pageSize, searchKeyword, statusFilter]);
 
-    // Áp dụng tìm kiếm và lọc
-    const filteredHomestays = homestays.filter((item) => {
-        const matchesKeyword = item.homestayName
-            .toLowerCase()
-            .includes(searchKeyword.toLowerCase());
-        const matchesStatus =
-            statusFilter === "all"
-                ? true
-                : statusFilter === "approved"
-                    ? item.status === true
-                    : item.status === false;
-        return matchesKeyword && matchesStatus;
-    });
-
-    // Cắt dữ liệu trang hiện tại
-    const paginatedHomestays = filteredHomestays.slice(
-        (currentPage - 1) * pageSize,
-        currentPage * pageSize
-    );
-
-    // Khi thay đổi filter hoặc tìm kiếm, reset về trang 1
     const handleSearchChange = (value) => {
         setSearchKeyword(value);
         setCurrentPage(1);
@@ -104,14 +91,14 @@ const HomestayList = () => {
                             gap: "24px",
                         }}
                     >
-                        {paginatedHomestays.map((item) => (
+                        {homestays.map((item) => (
                             <HomestayCard key={item.homestayId} data={item} />
                         ))}
                     </div>
                     <Pagination
                         current={currentPage}
                         pageSize={pageSize}
-                        total={filteredHomestays.length}
+                        total={totalItems}
                         onChange={(page) => setCurrentPage(page)}
                         style={{ marginTop: "24px", textAlign: "center" }}
                     />
