@@ -24,6 +24,7 @@ import LoginPage from './pages/login.jsx';
 import BookingOwnerPage from './pages/owner/booking.jsx';
 import HomestayOwnerList from './pages/owner/homestay.list.jsx';
 import OverviewOwner from './pages/owner/overview.owner.jsx';
+import PaymentPage from './pages/payment/payment.page.jsx';
 import PrivateRoute from './pages/private.route.jsx';
 import RegisterPage from './pages/register.jsx';
 import ResetPasswordPage from "./pages/resetpassword.jsx";
@@ -62,6 +63,12 @@ const router = createBrowserRouter([
           <PrivateRoute>
             <CustomerProfile />
           </PrivateRoute>
+        )
+      },
+      {
+        path: "/booking-history",
+        element: (
+          <PaymentPage />
         )
       }
     ]
@@ -107,7 +114,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, path: "", element: <OverviewOwner /> },
       { path: "homestay", element: <HomestayOwnerList /> },
-      { path: "bookings", element: <BookingOwnerPage/> },
+      { path: "bookings", element: <BookingOwnerPage /> },
     ],
   },
 ]);

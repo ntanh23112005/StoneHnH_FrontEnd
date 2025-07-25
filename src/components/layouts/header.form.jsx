@@ -69,7 +69,18 @@ const HeaderTop = () => {
             },
         ];
 
-        if (Array.isArray(user?.roleName) && user.roleName.includes('ROLE_ADMIN')) {
+        const roles = user?.roleName || [];
+
+        // Chỉ ROLE_USER hoặc ROLE_OWNER mới thấy "Lịch sử đặt phòng"
+        if (Array.isArray(roles) && (roles.includes('ROLE_USER') || roles.includes('ROLE_OWNER'))) {
+            items.push({
+                key: 'booking-history',
+                label: <Link to="/booking-history">Lịch sử đặt phòng</Link>,
+            });
+        }
+
+        // ROLE_ADMIN thấy "Quản trị"
+        if (Array.isArray(roles) && roles.includes('ROLE_ADMIN')) {
             items.push({
                 key: 'admin',
                 label: <Link to="/admin">Quản trị</Link>,
@@ -92,8 +103,6 @@ const HeaderTop = () => {
 
         return items;
     };
-
-
 
     const handleLogout = async () => {
         try {

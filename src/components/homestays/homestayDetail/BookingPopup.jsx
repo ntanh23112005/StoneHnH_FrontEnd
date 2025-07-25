@@ -1,14 +1,14 @@
-import { useState } from "react";
-import { DateRange } from "react-date-range";
-import { vi } from "date-fns/locale";
+import { Button, Modal, TimePicker, message } from "antd";
 import { differenceInCalendarDays } from "date-fns";
-import { Modal, Button, TimePicker, message } from "antd";
+import { vi } from "date-fns/locale";
 import dayjs from "dayjs";
 import "dayjs/locale/vi";
-import { formatDateTime } from "../../../utils/FormatDateTime";
-import { defaultBooking, defaultBookingDetail } from "../../../types/booking.type";
-import { createBookingWithDetail } from "../../../services/booking/api.booking";
+import { useState } from "react";
+import { DateRange } from "react-date-range";
 import { useBookingDates, useBookingGuests, useBookingTime } from "../../../hooks/useBookingHook";
+import { createBookingWithDetail } from "../../../services/booking/api.booking";
+import { defaultBooking, defaultBookingDetail } from "../../../types/booking.type";
+import { formatDateTime } from "../../../utils/FormatDateTime";
 
 
 const BookingPopup = (props) => {

@@ -1,6 +1,9 @@
+import { FilterOutlined, HomeOutlined } from "@ant-design/icons";
 import { Breadcrumb, Button, Col, Divider, message, Row, Spin } from "antd";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { AuthContext } from "../components/context/auth.context";
+import BookingPopup from "../components/homestays/homestayDetail/BookingPopup";
 import HomestayAmenities from "../components/homestays/homestayDetail/homestayDescription/homestayAmenities";
 import HomestayHeader from "../components/homestays/homestayDetail/homestayHeader";
 import HomestayLocationMap from "../components/homestays/homestayDetail/HomestayLocationMap";
@@ -12,9 +15,6 @@ import SafetyInfo from "../components/homestays/homestayDetail/homestayRulesAndP
 import HomestaySummary from "../components/homestays/homestayDetail/homestaySummary";
 import HostInfo from "../components/homestays/homestayDetail/hostInfo";
 import { getHomestayForDetailById } from "../services/homestay/homestay.api";
-import BookingPopup from "../components/homestays/homestayDetail/BookingPopup";
-import { FilterOutlined, HomeOutlined } from "@ant-design/icons";
-import { AuthContext } from "../components/context/auth.context";
 
 const HomestayDetailPage = () => {
     const { id } = useParams();
