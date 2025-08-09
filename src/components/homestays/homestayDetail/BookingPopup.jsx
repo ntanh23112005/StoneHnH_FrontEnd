@@ -9,11 +9,12 @@ import { useBookingDates, useBookingGuests, useBookingTime } from "../../../hook
 import { createBookingWithDetail } from "../../../services/booking/api.booking";
 import { defaultBooking, defaultBookingDetail } from "../../../types/booking.type";
 import { formatDateTime } from "../../../utils/FormatDateTime";
+import { useNavigate } from "react-router-dom";
 
 
 const BookingPopup = (props) => {
     const { open, onClose, dailyPrice, maxCustomer, homestay, customerId } = props;
-
+    const navigate = useNavigate();
     const [range, setRange] = useState([
         { startDate: new Date(), endDate: new Date(), key: "selection" },
     ]);
@@ -67,6 +68,7 @@ const BookingPopup = (props) => {
             message.success("Đặt phòng hoàn tất");
             onClose();
             resetState();
+            navigate('/booking-history')
         }
     };
 

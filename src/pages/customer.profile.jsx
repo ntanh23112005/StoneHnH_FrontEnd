@@ -69,7 +69,6 @@ const CustomerProfile = () => {
                 title="PROFILE"
                 bordered={false}
                 style={{ width: 800, borderRadius: 8 }}
-            // headStyle={{ color: "#4266b3", fontWeight: "bold", fontSize: 20 }}
             >
                 <Row gutter={24}>
                     <Col span={6}>
