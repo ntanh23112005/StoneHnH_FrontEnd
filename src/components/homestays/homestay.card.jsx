@@ -71,7 +71,7 @@ const HomestayCard = ({ data, showHeart = true, showRating = true, showBookingBu
                     {showRating && (
                         <div className="rating-badge">
                             <StarFilled className="text-yellow" />
-                            <span className="rating-text">{data.averageRate}</span>
+                            <span className="rating-text">{data.averageRate?.toFixed(1)}</span>
                         </div>
                     )}
                 </div>

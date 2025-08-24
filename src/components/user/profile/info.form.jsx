@@ -1,13 +1,29 @@
-import { Form, Input, Button, Tag, Row, Col, Modal } from "antd";
+import {
+  Form,
+  Input,
+  Button,
+  Tag,
+  Row,
+  Col,
+  Modal,
+  InputNumber,
+  message,
+} from "antd";
 import {
   CheckCircleOutlined,
+  CheckOutlined,
   CloseCircleOutlined,
   HomeOutlined,
   MailOutlined,
   PhoneOutlined,
 } from "@ant-design/icons";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import BankSelect from "../../payment/bank.select";
+import {
+  createNewCustomerBank,
+  updateCustomerBankByCustomerId,
+} from "../../../services/payment/payment-firebase";
+import { AuthContext } from "../../context/auth.context";
 
 const InfoForm = ({
   user,
@@ -15,14 +31,70 @@ const InfoForm = ({
   isEditMode,
   setIsEditMode,
   onSubmit,
+  customerBank,
 }) => {
-  const [form, formUpdateBank] = Form.useForm();
-
+  const [form] = Form.useForm();
+  const [formUpdateBank] = Form.useForm();
   const [isModalBankOpen, setIsModalBankOpen] = useState(false);
+  const { fetchCustomerBank } = useContext(AuthContext);
 
   useEffect(() => {
     form.setFieldsValue(initialValues);
   }, [initialValues]);
+
+  const submitBankForm = async () => {
+    try {
+      const values = await formUpdateBank.validateFields();
+      console.log("Bank form values:", values);
+
+      const bankData = {
+        accountNo: values.customerBankAccountNo
+          ? values.customerBankAccountNo.toString()
+          : "",
+        bin: values.bin ? values.bin.toString() : "",
+        customerId: user?.customerId || "",
+        customerBankName: values.customerBankName || "",
+      };
+
+      // console.log("Processed bank data:", bankData);
+      if (customerBank === null || customerBank === undefined) {
+        const resp = await createNewCustomerBank(bankData);
+
+        if (resp) {
+          message.success("Cập nhật ngân hàng thành công");
+          setIsModalBankOpen(false);
+          formUpdateBank.resetFields();
+
+          // Refresh lại dữ liệu ngân hàng
+          if (user?.customerId) {
+            await fetchCustomerBank(user.customerId);
+          }
+        } else {
+          message.error("Cập nhật ngân hàng thất bại");
+        }
+      } else {
+        const respUpdate = await updateCustomerBankByCustomerId(
+          user.customerId,
+          bankData
+        );
+        if (respUpdate) {
+          message.success("Cập nhật ngân hàng thành công");
+          setIsModalBankOpen(false);
+          formUpdateBank.resetFields();
+
+          // Refresh lại dữ liệu ngân hàng
+          if (user?.customerId) {
+            await fetchCustomerBank(user.customerId);
+          }
+        } else {
+          message.error("Cập nhật ngân hàng thất bại");
+        }
+      }
+    } catch (error) {
+      console.log("Validation failed", error);
+      message.error("Vui lòng kiểm tra lại thông tin");
+    }
+  };
 
   return (
     <>
@@ -111,12 +183,34 @@ const InfoForm = ({
           }}
         >
           <div>
-            <Button
-              onClick={() => setIsModalBankOpen(true)}
-              style={{ marginTop: 16 }}
-            >
-              Cập nhật thông tin ngân hàng
-            </Button>
+            {/* Sửa điều kiện hiển thị thông tin ngân hàng */}
+            {user.customerBank || customerBank ? (
+              <span>
+                <label style={{ marginRight: 10 }}>
+                  <CheckCircleOutlined
+                    style={{ color: "green", fontSize: 20 }}
+                    className="mr-2"
+                  />
+                  {customerBank.customerBankName
+                    ? customerBank.customerBankName
+                    : "KHÔNG XÁC ĐỊNH"}
+                </label>
+                <Button
+                  onClick={() => setIsModalBankOpen(true)}
+                  style={{ marginTop: 16 }}
+                >
+                  Thay đổi
+                </Button>
+              </span>
+            ) : (
+              <Button
+                onClick={() => setIsModalBankOpen(true)}
+                style={{ marginTop: 16 }}
+                type="primary"
+              >
+                Cập nhật thông tin ngân hàng
+              </Button>
+            )}
           </div>
 
           <div style={{ marginTop: 16 }}>
@@ -166,49 +260,70 @@ const InfoForm = ({
 
       <Modal
         title="Cập nhật ngân hàng"
-        closable={{ "aria-label": "Custom Close Button" }}
         open={isModalBankOpen}
-        onOk={() => {
-          form
-            .validateFields()
-            .then(onSubmit)
-            .catch((err) => console.log("Validation failed", err));
-
+        onOk={submitBankForm}
+        onCancel={() => {
           setIsModalBankOpen(false);
+          formUpdateBank.resetFields();
         }}
-        onCancel={() => setIsModalBankOpen(false)}
+        okText="Cập nhật"
+        cancelText="Hủy"
       >
         <Form form={formUpdateBank} layout="vertical">
-          <Row className="my-3" gutter={24}>
+          <Row className="my-2">
             <Col span={24}>
               <Form.Item
                 label="Chọn ngân hàng"
-                name="customerBank"
+                name="bin"
                 rules={[
                   {
                     required: true,
-                    message: "Vui lòng ngân hàng!",
+                    message: "Vui lòng chọn ngân hàng!",
                   },
                 ]}
               >
-                <BankSelect />
+                <BankSelect isModalBankOpen={isModalBankOpen} />
               </Form.Item>
             </Col>
           </Row>
 
-          <Row className="my-3" gutter={24}>
+          <Row className="my-2" gutter={24}>
             <Col span={24}>
               <Form.Item
-                label="Tên chủ ngân hàng (NGUYEN VAN A)"
+                label="Số tài khoản ngân hàng"
+                name="customerBankAccountNo"
+                rules={[
+                  {
+                    required: true,
+                    message: "Vui lòng nhập số tài khoản ngân hàng!",
+                  },
+                ]}
+              >
+                <InputNumber style={{ width: "100%" }} />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Row className="my-2" gutter={24}>
+            <Col span={24}>
+              <Form.Item
+                label="Tên chủ tài khoản (NGUYEN VAN A)"
                 name="customerBankName"
                 rules={[
                   {
                     required: true,
-                    message: "Vui lòng nhập tên chủ ngân hàng!",
+                    message: "Vui lòng nhập tên chủ tài khoản!",
+                  },
+                  {
+                    pattern: /^[A-Z\s]+$/,
+                    message: "Tên phải viết hoa không dấu (VD: NGUYEN VAN A)",
                   },
                 ]}
               >
-                <Input />
+                <Input
+                  placeholder="NGUYEN VAN A"
+                  style={{ textTransform: "uppercase" }}
+                />
               </Form.Item>
             </Col>
           </Row>

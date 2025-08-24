@@ -11,7 +11,7 @@ const UserTable = ({ data, onEdit }) => {
             dataIndex: 'roleName',
             key: 'roleName',
             render: roles => roles.map(role => (
-                <Tag key={role} color="blue">{role}</Tag>
+                <Tag key={role} color="purple">{role}</Tag>
             ))
         },
         {

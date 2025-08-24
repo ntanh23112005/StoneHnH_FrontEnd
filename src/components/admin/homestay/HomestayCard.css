@@ -119,7 +119,7 @@
 }
 
 .price {
-    color: #1677ff;
+    color: #8b5cf6;
     font-size: 16px;
 }
 
@@ -130,4 +130,17 @@
     margin-top: 12px;
     padding-top: 10px;
     border-top: 1px solid #f0f0f0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+    .cover-image {
+        height: 200px;
+    }
+}
+
+@media (max-width: 576px) {
+    .cover-image {
+        height: 160px;
+    }
 }
