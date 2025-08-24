@@ -1,0 +1,33 @@
+.admin-dashboard .homestay-breakdown,
+.admin-dashboard .order-breakdown {
+  margin-top: 8px;
+  font-size: 14px;
+  color: #555;
+}
+
+.admin-dashboard .order-breakdown div,
+.admin-dashboard .homestay-breakdown div {
+  margin-top: 4px;
+}
+
+.homestay-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+.admin-dashboard .ant-card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.homestay-breakdown,
+.order-breakdown {
+    text-align: right;
+    margin-top: 12px;
+    color: #555;
+    font-size: 14px;
+    line-height: 1.5;
+}

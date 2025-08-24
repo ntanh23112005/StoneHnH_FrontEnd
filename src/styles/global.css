@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  font-family: "Inter", sans-serif;
+}
+
+.custom-sider {
+  background-color: #4b71b8 !important;
+}
+
+.custom-sider .ant-menu {
+  background-color: #4b71b8 !important;
+  color: #fff;
+}
+
+.custom-sider .ant-menu-item {
+  color: #fff !important;
+  padding-top: 14px !important;
+  padding-bottom: 14px !important;
+  height: auto !important;
+}
+
+.custom-sider .ant-menu-item:hover {
+  background-color: #5c82cc !important;
+  color: #fff !important;
+}
+
+.custom-sider .ant-menu-item-selected {
+  background-color: #ffffff !important;
+  color: #4b71b8 !important;
+}
+
+.custom-sider .ant-menu-item-selected .anticon {
+  color: #4b71b8 !important;
+}
